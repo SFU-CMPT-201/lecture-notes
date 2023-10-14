@@ -74,7 +74,7 @@
       ```
 
 * Hardware
-    * (Look at the hardware pptx file together for figures)
+    * (Look at [hardware-figures.pptx](hardware-figures.pptx) together for figures.)
     * Components: CPU, mem, and I/O devices.
     * Two fundamental components in computing: computation and data
     * This is captured in the current computer architecture in CPU and memory.
