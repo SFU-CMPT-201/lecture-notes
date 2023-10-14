@@ -35,6 +35,40 @@
     * write a program that first creates a child process. The child process should run `exa -al`.
       The parent process should wait for the child process to terminate using `waitpid()`. If the
       child exited normally, print out "Child done." If not, print out the exit status.
+    * Example code
+
+      ```c
+      #include <stdio.h>
+      #include <stdlib.h>
+      #include <unistd.h>
+      #include <wait.h>
+
+      int main() {
+        pid_t pid = fork();
+
+        if (pid) {
+          int wstatus = 0;
+          if (waitpid(pid, &wstatus, 0) == -1) {
+            perror("waitpid");
+            exit(EXIT_FAILURE);
+          }
+
+          if (WIFEXITED(wstatus)) {
+            printf("Child done.\n");
+          } else {
+            printf("%d\n", WEXITSTATUS(wstatus));
+          }
+        } else {
+          if (execl("/usr/bin/exa", "-a", "-l", NULL) == -1) {
+            perror("execl");
+            exit(EXIT_FAILURE);
+          }
+        }
+
+        return 0;
+      }
+      ```
+
 * Zombie and orphan processes
     * Zombie
         * The child process terminates but the parent process hasn't called `wait()` yet.
@@ -46,3 +80,33 @@
     * `man errno`
     * Write a fork bomb. Need to get the `errno` and print out corresponding definition (`EAGAIN`,
       `ENOMEM`, etc.). Also use `perror()` to print out the corresponding system error message.
+    * Example code
+
+      ```c
+      #include <errno.h>
+      #include <stdio.h>
+      #include <unistd.h>
+
+      int main() {
+        while (1) {
+          if (fork() == -1) {
+            char *str = NULL;
+            switch (errno) {
+            case EAGAIN:
+              str = "EAGAIN";
+              break;
+            case ENOMEM:
+              str = "ENOMEM";
+              break;
+            case ENOSYS:
+              str = "ENOSYS";
+              break;
+            default:
+              break;
+            }
+            perror("fork");
+            printf("%s\n", str);
+          }
+        }
+      }
+      ```
