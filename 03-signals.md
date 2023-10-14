@@ -27,7 +27,7 @@
         * Use `write` instead of `printf`. The file descriptor for stdout is `STDOUT_FILENO`.
         * No need to set any flags, i.e., `0` is fine.
         * No need to set the masks either. `man sigsetops`.
-        * Use `btop` to kill the processes.
+        * Use `btop`  or `pkill` to kill the processes.
     * Example code
 
       ```c
