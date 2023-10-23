@@ -19,12 +19,13 @@
               pointer to your signal handler.
     * When using signals, you need to use signal safe functions.
         * `man signal-safety` for async-signal-safe functions
-* Signals activity
+* Activity: `sigaction()`
     * Write a program that creates a child process. The program should use `sigaction()` and install
       a signal handler that catches `SIGINT` and prints out "CTRL-C pressed." The parent should run
       an infinite loop with `sleep()`. The child should have an infinite loop that periodically
       sends `SIGINT` to the parent (with `sleep()`). Experiment with `CTRL-C` as well.
         * Use `write` instead of `printf`. The file descriptor for stdout is `STDOUT_FILENO`.
+          `printf` is not signal safe.
         * No need to set any flags, i.e., `0` is fine.
         * No need to set the masks either. `man sigsetops`.
         * Use `btop`  or `pkill` to kill the processes.

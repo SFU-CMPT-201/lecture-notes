@@ -10,29 +10,30 @@
       description is relevant to what you try to do.
     * Read the return value section. Check if errors are returned and what they are.
     * Read the error section to find out more about what errors there are.
-* `fork()` activity
+* Activity: `fork()`
     * Write a program that keeps calling `sleep()` with some timeout value.
         * Run it and check out `btop`.
             * Use the tree view. Check the PIDs.
             * Every process has a parent except for two (`init` and `kthreadd`, which are directly
               created by the kernel at boot time).
-        * `a.out` should a child of the shell (`zsh`).
+        * `a.out` should be a child of the shell (`zsh`).
     * Read the man page for `fork()`.
     * Write a program that calls `fork()` and then keeps calling `sleep()` with some timeout value.
-        * Run it and check out `btop` in tree mode. Kill them.
+        * Run it and check out `btop` in tree mode. There should be a new child process.
+        * Kill both processes.
     * Write a program that calls `fork()` and prints out "parent" and the child PID if it is the
       parent process. If it is the child, print out "child" as well as its PID and the parent's PID.
-      `man getpid` and `man getppid` to find out how to get the necessary PIDs.
+      Use `man getpid` and `man getppid` to find out how to get the necessary PIDs.
         * The parent and the child need to do different things. Use `if-else` with the return value
           of `fork()` to differentiate the behavior.
-* `exec()` activity
+* Activity: `exec()`
     * `man exec`
     * Write a program that creates a child process. The parent should call any one of `exec`
       functions that executes `ls -al`. The child should execute `exa -al`.
-        * This actually needs to be `ls -a -l`.
-* `wait()` activity
+        * `-al` actually needs to be `-a -l`.
+* Activity: `wait()`
     * `man wait`
-    * write a program that first creates a child process. The child process should run `exa -al`.
+    * Write a program that first creates a child process. The child process should run `exa -al`.
       The parent process should wait for the child process to terminate using `waitpid()`. If the
       child exited normally, print out "Child done." If not, print out the exit status.
     * Example code
@@ -73,13 +74,17 @@
     * Zombie
         * The child process terminates but the parent process hasn't called `wait()` yet.
         * This does not get cleaned up and occupies memory.
+        * This child process is called a zombie process (i.e., the process's dead but not
+          completely).
     * Orphan
         * The child process is running but the parent process has terminated.
+        * This process is called an orphan process as it doesn't have the parent process anymore.
         * On Linux, the child process becomes a child process of `init`.
-* `errno`.
+* Activity: `errno`
     * `man errno`
-    * Write a fork bomb. Need to get the `errno` and print out corresponding definition (`EAGAIN`,
-      `ENOMEM`, etc.). Also use `perror()` to print out the corresponding system error message.
+    * Write a fork bomb. It needs to get the `errno` and print out corresponding definition
+      (`EAGAIN`, `ENOMEM`, etc.). Also use `perror()` to print out the corresponding system error
+      message.
     * Example code
 
       ```c
