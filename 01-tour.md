@@ -4,7 +4,7 @@
   systems.
     * The terms that you will encounter in this course as well as any other contexts related to
       systems.
-* The traditional OS stack
+* The traditional OS stack: the hardware layer, the kernel layer, and the application layer
 
   ```bash
   +--------------+
@@ -86,7 +86,7 @@ There are different types of virtualization.
       isolation (namespaces), resource control/isolation (cgroups), etc.
     * This is the most popular form of virtualization these days, e.g., Docker, Podman.
 
-## Hardware
+## The Hardware Layer
 
 * (Look at [hardware-figures.pptx](hardware-figures.pptx) together for figures.)
 * Hardware components: CPU, memory, and I/O devices.
@@ -157,7 +157,7 @@ There are different types of virtualization.
               32-bit address requires 32 bits to be transferred. I.e., A 64-bit architecture
               requires more wires to transfer memory addresses.
 
-## Kernel
+## The Kernel Layer
 
 * Kernel roles
     * Resource management: many programs want to access the hardware at the same time. The
@@ -201,7 +201,7 @@ There are different types of virtualization.
     * Networking
         * Important terms are sockets, TCP, UDP, and IP. Later lectures cover these.
 
-## Applications
+## The Application Layer
 
 * Activity: LLVM compilation exercise
     * Purpose: examining a large code base and compiling it.
