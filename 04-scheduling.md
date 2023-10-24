@@ -9,7 +9,7 @@
     * A question arises---how do you share the same CPU?
 * These days, there are many more processes you want to run than the # of cores.
 
-## CPU scheduling
+## CPU Scheduling
 
 * Sharing a core by multiple processes
 * (Distributing processes across different cores is also a scheduling problem but that's not our
@@ -43,7 +43,7 @@
           gives up the core when it terminates or when it "waits" for something that takes a long
           time, e.g., I/O, child wait, sleep.
 
-## Scheduling criteria
+## Scheduling Criteria
 
 * Maximize:
     * CPU utilization: keep the CPU as busy as possible
@@ -55,7 +55,7 @@
     * Response time: amount of time it takes from when a request is submitted until the first
       response is produced
 
-## Scheduling algorithms
+## Scheduling Algorithms
 
 ### First Come, First Served (FCFS)
 
@@ -150,7 +150,7 @@
   overhead is too much, hence it is not going to have much time to do actual work, i.e., running
   processes.
 
-### Priority-Based Scheduling
+### Priority Scheduling
 
 * Among the processes in the ready queue, pick the process with the highest priority and run it.
 * This can be either preemptive or non-preemptive.

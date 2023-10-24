@@ -1,6 +1,6 @@
 # Signals
 
-## Signals overview
+## Signals Overview
 
 * `man 7 signal` for the overview.
     * Signals are notifications with specific meanings. Programs and the kernel can send signals to

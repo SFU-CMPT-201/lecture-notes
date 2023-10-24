@@ -1,6 +1,6 @@
 # Fork, Exec, and Wait
 
-## How to read a man page
+## How to Read a Man Page
 
 * Read the function signature first (and the header files). Carefully examine the return type and
   all parameters. A parameter can be either an input or an output. Find out what it is for each
