@@ -100,7 +100,7 @@
   bytes each.
 
   ```bash
-  Initial state
+  Initial state:
            +------------+
            |            | 255
            |            |
@@ -128,7 +128,9 @@
            |size = 240  |    (size = total_free - header_size = 256 - 16 = 240)
   head --> |next = null | 0
            +------------+
+  ```
 
+  ```bash
   After allocating 100 bytes (we *split* an existing free block):
            +------------+
            |            | 255
@@ -157,7 +159,9 @@
            |size = 100  |
            |next = null | 0
            +------------+
+  ```
 
+  ```bash
   After allocating another 50 bytes (again, we split):
            +------------+
            |            | 255
@@ -186,7 +190,9 @@
            |size = 100  |
            |next = null | 0
            +------------+
+  ```
 
+  ```bash
   Freeing the first 100-byte chunk (the freed block gets inserted at the list head):
            +------------+
            |            | 255
@@ -215,7 +221,9 @@
            |size = 100  |
   head --> |next = 182  | 0 (next points to the previous head at 182)
            +------------+
+  ```
 
+  ```bash
   Freeing the next 50-byte chunk (the freed block gets inserted at the list head):
            +------------+
            |            | 255
