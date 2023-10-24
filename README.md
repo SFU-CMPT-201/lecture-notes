@@ -6,3 +6,5 @@ This repo contains lecture summary notes and in-class activities.
 * [Fork, Exec, and Wait](02-fork-exec-wait.md)
 * [Signals](03-signals.md)
 * [Scheduling Algorithms](04-scheduling.md)
+* [Virtual Memory](05-virtual-memory.md)
+* [Memory Management](06-memory-management.md)

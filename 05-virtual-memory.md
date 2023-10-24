@@ -308,6 +308,10 @@
       ```
 
     * Paging does not have this problem since every page is of the same size.
+    * On the other hand, paging might have *internal fragmentation* problems. When a program uses a
+      page, it may not use the whole page but only a small portion of the page. Nevertheless, the
+      unit of allocation for paging is pages (i.e., paging swaps a page in or out). Thus, there can
+      be wasted space internal to a page. This is called *internal fragmentation*.
 
 ## What If We Run Out of Memory?
 
