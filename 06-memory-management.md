@@ -7,6 +7,14 @@
       memory (and every systems programming course does this).
 * We are not talking about physical memory here. User processes can only use virtual memory, not
   physical memory.
+* You can read more about this topic in the following chapters of
+  [OSTEP](https://pages.cs.wisc.edu/~remzi/OSTEP/). Keep in mind that OSTEP's discussions are much
+  more in depth, which we consider out of scope for this course. Thus, you can use it as a reference
+  but the main source should still be this lecture note.
+    * [Chapter 13 The Abstraction: Address
+      Spaces](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-intro.pdf)
+    * [Chapter 14 Interlude: Memory API](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-api.pdf)
+    * [Chapter 15 Free-Space Management](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-freespace.pdf)
 
 ## `brk()` and `sbrk()`
 

@@ -1,5 +1,18 @@
 # Virtual Memory
 
+* Virtual memory is one of the most important OS concepts.
+* It is also a good example that shows the power of abstraction.
+* You can read more about this topic in the following chapters of
+  [OSTEP](https://pages.cs.wisc.edu/~remzi/OSTEP/). Keep in mind that OSTEP's discussions are much
+  more in depth, which we consider out of scope for this course. Thus, you can use it as a reference
+  but the main source should still be this lecture note.
+    * [Chapter 13 The Abstraction: Address
+      Spaces](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-intro.pdf)
+    * [Chapter 15 Mechanism: Address
+      Translation](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-mechanism.pdf)
+    * [Chapter 18 Paging: Introduction](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-paging.pdf)
+    * [Chapter 16 Segmentation](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-segmentation.pdf)
+
 ## Memory Layout in the Early Days
 
 * The entire memory was divided into two: OS and program.

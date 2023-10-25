@@ -1,13 +1,21 @@
 # Scheduling Algorithms
 
-## Scheduling
-
 * This is more about kernel internals but nevertheless an important topic, so one should know this
   even if one doesn't take an OS internals course.
 * Back in the day, there was only a single core but still there were many users and they all wanted
   to use the same system.
     * A question arises---how do you share the same CPU?
-* These days, there are many more processes you want to run than the # of cores.
+    * These days, there are many more processes you want to run than the # of cores. Thus, the same
+      question remains.
+* You can read more about this topic in the following chapters of
+  [OSTEP](https://pages.cs.wisc.edu/~remzi/OSTEP/). Keep in mind that OSTEP's discussions are much
+  more in depth, which we consider out of scope for this course. Thus, you can use it as a reference
+  but the main source should still be this lecture note.
+    * [Chapter 7 Scheduling: Introduction](https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched.pdf)
+    * [Chapter 8 Scheduling: The Multi-Level Feedback
+      Queue](https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched-mlfq.pdf)
+    * Chapter 9.7 The Linux Completely Fair Scheduler (CFS) in [Chapter 9 Scheduling: Proportional
+      Share](https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched-lottery.pdf)
 
 ## CPU Scheduling
 
