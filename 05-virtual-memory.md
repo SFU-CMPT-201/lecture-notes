@@ -178,8 +178,8 @@
   following is an example with two processes (where page numbers are in binary).
 
   ```bash
-  Process A's     Process B's
-  address space   address space
+  Process A's      Process B's
+  address space    address space
 
   +---------+      +---------+
   | page 11 |      | page 11 |
@@ -228,8 +228,8 @@
       | 10          | 00                |
       +---------------------------------+
 
-      Virtual          Physical
-      Address          Memory
+      Virtual            Physical
+      Address            Memory
       Space
                    +--------------------+
       +---------+  |     +----------+   |
