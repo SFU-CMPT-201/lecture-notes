@@ -119,12 +119,14 @@ return the length of the received string.
         * Assume we are dealing with a variable (`cnt`) that currently contains 5 as its data.
         * Assume that each thread adds 1 to `cnt` and assigns the result back to `cnt`, just like
           the code from the above activity.
-        * Thread0 loads `cnt`'s data (5) from memory.
-        * Thread1 loads `cnt`'s data (5) from memory.
-        * Thread0 adds 1 to 5.
-        * Thread1 adds 1 to 5.
-        * Thread0 write the result back to memory, i.e., it writes 6 back to memory.
-        * Thread1 write the result back to memory, i.e., it writes 6 back to memory.
+        * Since two threads can run concurrently, the following could happen.
+            * Thread0 loads `cnt`'s data (5) from memory.
+            * At the same time, Thread1 loads `cnt`'s data (5) from memory.
+            * Thread0 adds 1 to 5.
+            * At the same time, Thread1 adds 1 to 5.
+            * Thread0 write the result back to memory, i.e., it writes 6 back to memory.
+            * At the same time, Thread1 write the result back to memory, i.e., it writes 6 back to
+              memory.
         * The correct result that we expect is 7 since we have added 1 twice to `cnt`. However,
           `cnt`'s final value in memory is 6, not 7, since Thread0 and Thread1 both wrote 6 back to
           memory.
