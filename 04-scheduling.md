@@ -206,19 +206,22 @@
 * Each *queue* gets CPU time based on its priority. There are many algorithms one can use but for
   example, we could use the following algorithm (each number indicates which priority queue we
   choose):
-    * 0, 1, 2, 0, 1, 0, 0, 1, 2, 0, 1, 0, 0, 1, 2, 0, 1, 0, ...
-    * This is preemptive.
-    * We first pick a process from priority 0 queue.
-    * We preempt the process, and run a process from priority 1 queue.
-    * We preempt and run a process from priority 2 queue.
-    * We repeat this and go back to pick a process from priority 0 and then priority 1 queues.
-      However, we stop there and don't run a process from priority 2 queue.
-    * So we go back to pick a process from priority 0 queue. However, we stop there and don't run a
-      process from priority 1 queue.
-    * If we repeat the above steps, we give more CPU time for priority 0 queue than priority 1
-      queue, and also more CPU time for priority 1 queue than priority 2 queue.
     * This is called *weighted* RR. It is a variation of RR but there is a weight associated with
       scheduling, i.e., it is basically RR but we give more CPU time to higher priority queues.
+        * This is preemptive, i.e., a process runs for a time quantum then yields to another
+          process.
+    * An example run of the algorithm is as follows.
+        * 0, 1, 2, 0, 1, 0, 0, 1, 2, 0, 1, 0, 0, 1, 2, 0, 1, 0, ...
+    * Steps for the example:
+        * We first pick a process from priority 0 queue.
+        * We preempt the process, and run a process from priority 1 queue.
+        * We preempt and run a process from priority 2 queue.
+        * We repeat this and go back to pick a process from priority 0 and then priority 1 queues.
+          However, we stop there and don't run a process from priority 2 queue.
+        * So we go back to pick a process from priority 0 queue. However, we stop there and don't run a
+          process from priority 1 queue.
+        * If we repeat the above steps, we give more CPU time for priority 0 queue than priority 1
+          queue, and also more CPU time for priority 1 queue than priority 2 queue.
 * When we pick a process from each queue, we also use a scheduling algorithm. We do not need to use
   the same scheduling algorithm for every queue. E.g., priority 0 queue runs the priority scheduling
   algorithm discussed above, priority 1 queue runs RR, and priority 2 queue runs the FCFS algorithm.
