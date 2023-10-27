@@ -415,7 +415,7 @@
 * 10 page faults
 * This is simple but does not consider useful properties like locality.
 
-### LRU
+### LRU (Least Recently Used)
 
 * This algorithm replaces page that has not been used for longest period.
     * It tries to approximate the optimal algorithm.
@@ -436,7 +436,7 @@
               +---+   +---+   +---+   +---+      +---+       +---+   +---+   +---+
   ```
 
-* 6 page faults
+* 8 page faults
 * Keeping track of access time is not simple to implement. The next algorithm approximates this.
 
 ### Second-Chance
