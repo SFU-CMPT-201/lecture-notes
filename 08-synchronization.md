@@ -266,7 +266,9 @@
       }
       ```
 
-* A deadlock may arise when the following conditions hold at the same time.
+* A deadlock *may* arise when the following conditions hold at the same time. We emphasize again
+  that a deadlock may not always occur even if the conditions below hold. This is because it all
+  depends on the timing of thread execution.
     * *Hold and wait*: threads are already holding resources but also are waiting for additional
       resources being held by other threads.
     * *Circular wait*: there exists a set {T0, T1, ..., Tn} of threads such that T0 is waiting for
