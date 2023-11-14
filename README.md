@@ -9,3 +9,4 @@ This repo contains lecture summary notes and in-class activities.
 * [Virtual Memory](05-virtual-memory.md)
 * [Memory Management](06-memory-management.md)
 * [Threads](07-threads.md)
+* [Synchronization](08-synchronization.md)
