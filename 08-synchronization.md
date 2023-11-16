@@ -29,10 +29,10 @@
     * A `lock()` function that grabs a lock.
     * An `unlock()` function that releases a lock.
 * For example, the pthread library provides a lock mechanism as follows.
-    * `pthread_mutex_t`: a data type to define a lock.
-    * `int pthread_mutex_lock(pthread_mutex_t *mutex)`: a lock function that grabs the lock passed
+    * `pthread_mutex_t`: the data type to define a lock.
+    * `int pthread_mutex_lock(pthread_mutex_t \*mutex)`: the lock function that grabs the lock passed
       as the argument.
-    * `int pthread_mutex_unlock(pthread_mutex_t *mutex)`: an unlock function that releases the lock
+    * `int pthread_mutex_unlock(pthread_mutex_t \*mutex)`: the unlock function that releases the lock
       passed as the argument.
     * Other languages (e.g., Java, Python, etc.) provide similar lock mechanisms with different type
       names and function names.
@@ -58,6 +58,9 @@
   threads need to wait (if they all call `lock()`) until the lock becomes available.
     * Only one thread at a time can grab a lock and we *can't* control the order in which different
       threads grab the lock. It depends on the underlying lock mechanism.
+    * As mentioned previously, this behavior is referred to as *non-deterministic* behavior, i.e.,
+      it exhibits different behavior every time it runs. This is as opposed to *deterministic*
+      behavior.
 * Going back to the data race example, we can use a lock to avoid the mix-up of sub-operations from
   different threads.
     * We can "guard" the region of code that updates `cnt` by calling `lock()` beforehand and
@@ -404,3 +407,511 @@
       progress. This is called a livelock.
     * Both deadlocks and livelocks do not make any progress. In a livelock scenario, threads do
       still execute. In a deadlock scenario, threads are stuck and do not execute anything actively.
+
+## Condition Variables
+
+* There is a common programming pattern called producer-consumer.
+    * It has a set of threads *producing* data and another set of threads *consuming* the data. (We
+      will discuss this more later.)
+    * There is typically a shared resource, e.g., a variable or a buffer that these threads access
+      for either producing or consuming data.
+    * Therefore, the shared resource needs protection.
+* Consider the code below that has one producer and one consumer.
+    * The producer (`thread_func()`) keeps incrementing the global variable `avail`.
+    * The consumer (`main()`) keeps decrementing the global variable `avail` until it reaches
+      0.
+    * With the producer, we are simulating a scenario where a producer produces one item at a time.
+    * With the consumer, we are simulating a scenario where a consumer consumes all available items
+      and repeats.
+    * We use one mutex to serialize access to `avail`. This avoids potential data race problems.
+
+  ```c
+  #include <pthread.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <unistd.h>
+
+  static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
+
+  static int avail = 0;
+
+  static void *thread_func(void *arg) {
+    for (;;) {
+      int s = pthread_mutex_lock(&mtx);
+      if (s != 0) {
+        perror("pthread_mutex_lock");
+        pthread_exit((void *)1);
+      }
+      avail++;
+
+      s = pthread_mutex_unlock(&mtx);
+      if (s != 0) {
+        perror("pthread_mutex_unlock");
+        pthread_exit((void *)1);
+      }
+      sleep(1);
+    }
+
+    return 0;
+  }
+
+  int main() {
+    pthread_t t1;
+    void *res;
+    int s;
+
+    s = pthread_create(&t1, NULL, thread_func, NULL);
+    if (s != 0) {
+      perror("pthread_create");
+      exit(1);
+    }
+
+    for (;;) {
+      s = pthread_mutex_lock(&mtx);
+      if (s != 0) {
+        perror("pthread_mutex_lock");
+        exit(1);
+      }
+
+      while (avail > 0) {
+        /* This is simulating "consume everything available" */
+        avail--;
+      }
+
+      s = pthread_mutex_unlock(&mtx);
+      if (s != 0) {
+        perror("pthread_mutex_unlock");
+        exit(1);
+      }
+    }
+
+    s = pthread_join(t1, &res);
+    if (s != 0) {
+      perror("pthread_create");
+      exit(1);
+    }
+  }
+  ```
+
+* Now, the program avoids data race but it is inefficient.
+    * In the main thread, the `for` loop keeps running (i.e., uses the CPU and wastes it) even if
+      `avail > 0` is not true. In other words, it keeps checking if there is something to consume
+      even if there is nothing to consume.
+* A condition variable is a primitive that can address this inefficiency.
+    * Using a condition variable, (i) a thread can send a notification to the condition variable,
+      and (ii) another thread can wait until a notification is sent to the condition variable.
+    * The key point is that the waiting thread, while waiting, goes to sleep and does not use the
+      CPU. This means that other processes/threads can utilize the CPU to perform useful work.
+* The pthread library provides support for condition variables as follows.
+    * `pthread_cond_t`: the data type to define a condition variable.
+    * `pthread_cond_signal(pthread_cond_t \*cond)`: the function that sends a signal to `cond`. If
+      there is a thread waiting on `cond`, this wakes up the thread.
+    * `pthread_cond_wait(pthread_cond_t \*cond, pthread_mutex_t \*mutex)`: the function that waits
+      for a signal sent to `cond`.
+        * For `mutex`, it behaves like a lock-safe sleep. Internally, it releases `mutex`, waits for
+          a signal on `cond`, and (once a signal is sent to `cond`,) wakes up and re-grabs `mutex`.
+          In other words, it does not go to sleep while holding a lock.
+        * This is because doing so would unnecessarily prevent other threads from grabbing the lock.
+        * See the example below for an illustration.
+    * `pthread_cond_broadcast(pthread_cond_t \*cond)`: the function that wakes up all threads
+      waiting on `cond`.
+        * The difference is that `pthread_cond_signal()` wakes up just a single thread (out of all
+          threads waiting on `cond`)---but we do not have control over which one to wake up.
+        * With `pthread_cond_broadcast()`, all threads wake up and try to grab `mutex`, i.e., they
+          compete for the lock.
+        * If all threads do the same thing and it doesn't matter which thread does the work,
+          `pthread_cond_signal()` is the right one to use.
+        * If individual threads are expected to do different things, `pthread_cond_broadcast()` is
+          the right one to use.
+* Consider the following code that does the same thing as before, but with a condition variable.
+    * We still use `mutex` to protect the shared variable `avail`.
+    * The producer, once it produces one item, sends a signal to `cond` to wake up a waiting thread,
+      if any (`s = pthread_cond_signal(&cond)`). This is to notify the other thread that there is
+      something to consume.
+    * At each iteration, the consumer first checks if there is any available item to consume (the
+      new while loop). If nothing's available (`avail == 0`), it goes to sleep. Since it calls
+      `pthread_cond_wait()`, it releases `mutex` before going to sleep, which means that other
+      threads waiting for the lock can grab the lock and perform some useful work. When the consumer
+      wakes up (after the producer signals), it grabs `mutex` again before returning from
+      `pthread_cond_wait()`. As explained earlier, these are the internal steps of
+      `pthread_cond_wait()`.
+
+  ```c
+  #include <pthread.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+
+  static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
+  static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+
+  static int avail = 0;
+
+  static void *thread_func(void *arg) {
+    for (;;) {
+      int s = pthread_mutex_lock(&mtx);
+      if (s != 0) {
+        perror("pthread_mutex_lock");
+        pthread_exit((void *)1);
+      }
+      avail++;
+
+      s = pthread_mutex_unlock(&mtx);
+      if (s != 0) {
+        perror("pthread_mutex_unlock");
+        pthread_exit((void *)1);
+      }
+
+      // This signal is new.
+      s = pthread_cond_signal(&cond);
+      if (s != 0) {
+        perror("pthread_cond_signal");
+        pthread_exit((void *)1);
+      }
+
+      sleep(1);
+    }
+
+    return 0;
+  }
+
+  int main() {
+    pthread_t t1;
+    void *res;
+    int s;
+
+    s = pthread_create(&t1, NULL, thread_func, NULL);
+    if (s != 0) {
+      perror("pthread_create");
+      exit(1);
+    }
+
+    for (;;) {
+      s = pthread_mutex_lock(&mtx);
+      if (s != 0) {
+        perror("pthread_mutex_lock");
+        exit(1);
+      }
+
+      // This while loop is new.
+      while (avail == 0) {
+        s = pthread_cond_wait(&cond, &mtx);
+        if (s != 0) {
+          perror("pthread_mutex_lock");
+          exit(1);
+        }
+      }
+
+      while (avail > 0) {
+        /* This is simulating "consume everything available" */
+        avail--;
+      }
+
+      s = pthread_mutex_unlock(&mtx);
+      if (s != 0) {
+        perror("pthread_mutex_unlock");
+        exit(1);
+      }
+    }
+
+    s = pthread_join(t1, &res);
+    if (s != 0) {
+      perror("pthread_create");
+      exit(1);
+    }
+  }
+  ```
+
+    * Notice that the consumer uses `while (avail == 0)`, not `if (avail == 0)` to check if there is
+      any available item to consume. This means that after it wakes up from `pthread_cond_wait()`,
+      it checks again if there is still an available item.
+    * This is *necessary* because in `pthread_cond_wait()`, it internally grabs `mutex` before
+      returning (as explained earlier). Generally speaking, since this is a lock, there can be
+      other threads that can grab the lock and and consume available items. Thus, we always need to
+      check again if there are indeed available items to consume using a while loop.
+* Thus, using a condition variable generally follows this template.
+
+  ```c
+  #include <pthread.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+
+  static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
+  static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+
+  int main() {
+    int s = pthread_mutex_lock(&mtx);
+
+    if (s != 0) {
+      perror("pthread_mutex_lock");
+      exit(1);
+    }
+
+    while (/* Check if the shared variable is not in the state we want, e.g., if there is nothing to
+              consume */)
+      /* Use while, not if, for safety. Although pthread_cond_signal should've
+       * been called because the shared variable were in the state we want, other
+       * threads might have woken up first and changed the shared variable. */
+      pthread_cond_wait(&cond, &mtx);
+
+    // Do the necessary work with the shared variable, e.g., consume.
+
+    s = pthread_mutex_unlock(&mtx);
+    if (s != 0) {
+      perror("pthread_mutex_lock");
+      exit(1);
+    }
+  }
+  ```
+
+## Semaphores
+
+* This is another synchronization primitive.
+* You can think of a semaphore as a lock with a count.
+    * A semaphore allows multiple threads to grab the same lock.
+    * You first need to initialize the semaphore with the max number of threads that you want to
+      allow to grab the lock.
+* In pthread, there are three functions to note.
+    * `sem_init(sem_t \*sem, int pshared, unsigned int value)`: the function that initializes the
+      count to `value` for `sem`. This allows up to `value` number of threads to grab `sem`.
+      `pshared` indicates if `sem` is for threads (`0`) or processes (`1`).
+    * `sem_wait(sem_t \*sem)`: the function that grabs `sem`. Internally, if the count is 0, it
+      blocks (i.e., does not return) until the count becomes greater than 0. If the count is (or
+      becomes) greater than 0, it decrements the count by one and returns.
+    * `sem_post(sem_t \*sem)`: the function that "releases" `sem`. Internally, it increments the
+      count by one.
+    * `sem_init(&sem, 0, 1)` is the same as a mutex.
+
+## Read-Write Lock
+
+* This is also a synchronization primitive.
+* A read-write lock allows either unlimited readers or a single writer but not both (XOR).
+* In pthread, two functions to note.
+    * `pthread_rwlock_rdlock(pthread_rwlock_t *rwlock)`: the function that grabs `rwlock` for
+      reading. This allows any threads to grab `rwlock` as long as there is no thread that holds
+      `rwlock` for writing (the next function).
+    * `pthread_rwlock_wrlock(pthread_rwlock_t *rwlock)`: the function that grabs `rwlock` for
+      writing. This allows only one thread to grab `rwlock`.
+
+## Dining Philosophers
+
+* Problem Description
+    * Philosophers alternate between eating and thinking
+    * To eat, a philosopher needs two forks (at her left and right). To think, no forks needed.
+    * Each thread is a philosopher.
+    * Coordination needed to grab forks.
+* Activity: come up with a solution that protects shared resources correctly and does not deadlock.
+    * One big lock (not efficient)
+    * A lock for each fork
+    * A wrong solution: grabbing right (or left) fork and then another for all threads
+      results in a deadlock due to hold-and-wait and circular-wait.
+    * Deadlock conditions (discussed previously)
+        * Hold-and-wait
+        * Circular wait
+        * Mutual exclusion
+        * No preemption
+    * We can break any of these conditions to avoid a deadlock.
+* Possible solutions
+    * At least one philosopher grabs forks in a different order.
+    * Use condition variables.
+        * Grab the left lock. Try the right lock. Wait for the signal. When done eating, signal.
+        * When waiting, it gives up the left lock.
+
+      ```c
+      #include <pthread.h>
+      #include <stdio.h>
+      #include <stdlib.h>
+      #include <unistd.h>
+
+      #define NUMBER 5
+
+      static pthread_mutex_t mtx[NUMBER];
+      static pthread_cond_t cond[NUMBER];
+
+      static void *thread_func(void *arg) {
+        int left = (int)arg;
+        int right = ((int)arg + 1) % NUMBER;
+        for (;;) {
+          printf("Thread %d: thinking\n", (int)arg);
+          sleep(5);
+
+          int s = pthread_mutex_lock(&mtx[left]);
+          if (s != 0) {
+            perror("pthread_mutex_lock");
+            pthread_exit((void *)1);
+          }
+
+          while (pthread_mutex_trylock(&mtx[right]) != 0) {
+            s = pthread_cond_wait(&cond[right], &mtx[left]);
+            if (s != 0) {
+              perror("pthread_cond_wait");
+              pthread_exit((void *)1);
+            }
+          }
+
+          printf("Thread %d: eating\n", (int)arg);
+
+          s = pthread_mutex_unlock(&mtx[left]);
+          if (s != 0) {
+            perror("pthread_mutex_unlock");
+            pthread_exit((void *)1);
+          }
+
+          s = pthread_mutex_unlock(&mtx[right]);
+          if (s != 0) {
+            perror("pthread_mutex_unlock");
+            pthread_exit((void *)1);
+          }
+
+          s = pthread_cond_signal(&cond[left]);
+          if (s != 0) {
+            perror("pthread_cond_signal");
+            pthread_exit((void *)1);
+          }
+
+          s = pthread_cond_signal(&cond[right]);
+          if (s != 0) {
+            perror("pthread_cond_signal");
+            pthread_exit((void *)1);
+          }
+        }
+
+        return 0;
+      }
+
+      int main() {
+        pthread_t t[NUMBER];
+        void *res;
+        int s;
+
+        for (int i = 0; i < NUMBER; ++i) {
+          s = pthread_create(&t[i], NULL, thread_func, i);
+          if (s != 0) {
+            perror("pthread_create");
+            exit(1);
+          }
+        }
+
+        for (int i = 0; i < NUMBER; ++i) {
+          s = pthread_join(t[i], &res);
+          if (s != 0) {
+            perror("pthread_create");
+            exit(1);
+          }
+        }
+      }
+      ```
+
+## Producer-Consumer with a Bounded Buffer (aka Circular Buffer)
+
+* Problem Description
+    * Threads sharing a buffer
+    * Producers place items into the buffer
+        * Must wait if the buffer is full
+    * Consumers take items from the buffer
+        * Must wait if buffer is empty
+* Possible solutions
+    * Using one lock: threads need to compete and check for availability
+    * Using semaphores: simpler
+
+      ```c
+      #include <pthread.h>
+      #include <semaphore.h>
+      #include <stdio.h>
+      #include <stdlib.h>
+      #include <unistd.h>
+
+      #define SIZE 10
+
+      static char buf[SIZE] = {0};
+      static int in = 0, out = 0;
+      static sem_t filled_cnt;
+      static sem_t avail_cnt;
+      static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
+
+      static void *thread_func(void *arg) {
+        int s;
+        for (;;) {
+          sleep(5);
+          if (sem_wait(&filled_cnt) == -1) {
+            perror("sem_wait");
+            pthread_exit((void *)1);
+          }
+          s = pthread_mutex_lock(&mtx);
+          if (s != 0) {
+            perror("pthread_mutex_lock");
+            exit(1);
+          }
+
+          // consume
+          printf("Consumed: %d\n", buf[out]);
+          out = (out + 1) % SIZE;
+
+          s = pthread_mutex_unlock(&mtx);
+          if (s != 0) {
+            perror("pthread_mutex_lock");
+            exit(1);
+          }
+
+          if (sem_post(&avail_cnt) == -1) {
+            perror("sem_post");
+            pthread_exit((void *)1);
+          }
+        }
+
+        return 0;
+      }
+
+      int main() {
+        pthread_t t1;
+        void *res;
+        int s;
+        if (sem_init(&filled_cnt, 0, 0) == -1) {
+          perror("sem_init");
+          exit(1);
+        }
+        if (sem_init(&avail_cnt, 0, SIZE) == -1) {
+          perror("sem_init");
+          exit(1);
+        }
+
+        s = pthread_create(&t1, NULL, thread_func, NULL);
+        if (s != 0) {
+          perror("pthread_create");
+          exit(1);
+        }
+
+        for (int i = 0;; i++) {
+          if (sem_wait(&avail_cnt) == -1) {
+            perror("sem_wait");
+            exit(1);
+          }
+          s = pthread_mutex_lock(&mtx);
+          if (s != 0) {
+            perror("pthread_mutex_lock");
+            exit(1);
+          }
+
+          // produce
+          buf[in] = i;
+          printf("Produced: %d in %d\n", buf[in], in);
+          in = (in + 1) % SIZE;
+
+          s = pthread_mutex_unlock(&mtx);
+          if (s != 0) {
+            perror("pthread_mutex_lock");
+            exit(1);
+          }
+
+          if (sem_post(&filled_cnt) == -1) {
+            perror("sem_post");
+            exit(1);
+          }
+        }
+
+        s = pthread_join(t1, &res);
+        if (s != 0) {
+          perror("pthread_create");
+          exit(1);
+        }
+      }
+      ```

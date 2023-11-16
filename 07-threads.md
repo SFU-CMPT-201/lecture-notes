@@ -91,10 +91,10 @@
 
 ### Pthread Activity
 
-Write a program where the main thread creates another thread. In the main thread, it should print
-out the new thread's ID, wait until it terminates, and print out the return value. The other thread
-should get a string from the main thread as the argument, print that out as well as its own ID, and
-return the length of the received string.
+* Write a program where the main thread creates another thread. In the main thread, it should print
+  out the new thread's ID, wait until it terminates, and print out the return value. The other
+  thread should get a string from the main thread as the argument, print that out as well as its own
+  ID, and return the length of the received string.
     * Note: a thread start function can cast the return type to integer types (e.g., `long`).
     * When compiling a program that uses pthreads, you need to use `-pthread` as a compiler option,
       e.g., `clang -pthread example.c`.
@@ -107,6 +107,9 @@ return the length of the received string.
   print out the value of `cnt`. Run it multiple times and see the outputs.
     * The outputs should be *non-deterministic*, meaning the behavior should be different every time
       the program runs.
+    * This is as oppose to *deterministic* behavior where a program behaves the same way every time
+      it runs.
+    * The execution of a concurrent program is typically non-deterministic.
 * This problem is known as the *data race problem*.
     * If you run multiple threads on different cores, they run at the same time.
     * If you perform an addition in a C program, it appears to be a single operation but it is not.
