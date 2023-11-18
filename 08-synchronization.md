@@ -694,11 +694,12 @@
 
 ## Dining Philosophers
 
+![Dining philosophers illustration](dining-philosophers.jpg | width=100)
+
 * For a detailed description, read the section on dining philosophers in OSTEP's [Chapter 31
   Semaphore](https://pages.cs.wisc.edu/~remzi/OSTEP/threads-sema.pdf).
 * Problem Description
-    * Philosophers sit at a round table. ![Dining philosophers
-      illustration](dining-philosophers.jpg)
+    * Philosophers sit at a round table.
     * Philosophers alternate between eating and thinking.
     * In between any two philosophers sitting next to each other, there is a fork.
     * To eat, a philosopher needs two forks (at her left and right). To think, no forks are needed.
