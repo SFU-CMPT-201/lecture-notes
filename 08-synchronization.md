@@ -694,7 +694,7 @@
 
 ## Dining Philosophers
 
-<img src="dining-philosophers.jpg" width="50%">
+<img src="dining-philosophers.png" width="50%">
 
 * For a detailed description, read the section on dining philosophers in OSTEP's [Chapter 31
   Semaphore](https://pages.cs.wisc.edu/~remzi/OSTEP/threads-sema.pdf).
