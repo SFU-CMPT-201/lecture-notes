@@ -821,15 +821,18 @@
 
 ## Producer-Consumer with a Bounded Buffer (aka Circular Buffer)
 
+* For a detailed description, read the section on dining philosophers in OSTEP's [Chapter 31
+  Semaphore](https://pages.cs.wisc.edu/~remzi/OSTEP/threads-sema.pdf).
 * Problem Description
-    * Threads sharing a buffer
-    * Producers place items into the buffer
+    * Multiple threads sharing a buffer.
+    * Producer threads place items into the buffer
         * Must wait if the buffer is full
-    * Consumers take items from the buffer
+    * Consumers threads take items from the buffer
         * Must wait if buffer is empty
 * Possible solutions
-    * Using one lock: threads need to compete and check for availability
-    * Using semaphores: simpler
+    * Using one lock: we could use one mutex that all threads use when they access the buffer.
+        * This is inefficient because all threads need to compete and check for availability.
+    * Using semaphores: semaphores lead to a simpler and more elegant solution.
 
       ```c
       #include <pthread.h>
