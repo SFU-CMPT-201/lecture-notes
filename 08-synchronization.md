@@ -694,27 +694,44 @@
 
 ## Dining Philosophers
 
+* For a detailed description, read the section on dining philosophers in OSTEP's [Chapter 31
+  Semaphore](https://pages.cs.wisc.edu/~remzi/OSTEP/threads-sema.pdf).
 * Problem Description
-    * Philosophers alternate between eating and thinking
-    * To eat, a philosopher needs two forks (at her left and right). To think, no forks needed.
+    * Philosophers sit at a round table. ![Dining philosophers
+      illustration](dining-philosophers.jpg)
+    * Philosophers alternate between eating and thinking.
+    * In between any two philosophers sitting next to each other, there is a fork.
+    * To eat, a philosopher needs two forks (at her left and right). To think, no forks are needed.
+    * This means that each fork is shared by two philosophers sitting next to each other.
+* We can model this problem as a synchronization problem.
     * Each thread is a philosopher.
-    * Coordination needed to grab forks.
+    * A fork is a shared resource, and needs access control. I.e., coordination is needed to grab
+      forks.
 * Activity: come up with a solution that protects shared resources correctly and does not deadlock.
-    * One big lock (not efficient)
-    * A lock for each fork
-    * A wrong solution: grabbing right (or left) fork and then another for all threads
-      results in a deadlock due to hold-and-wait and circular-wait.
-    * Deadlock conditions (discussed previously)
+    * One big lock (not efficient): we can use one mutex to guard all forks and control access. This
+      avoids deadlocks but allows only one philosopher to eat. No other philosophers can eat if one
+      philosopher holds a lock.
+    * We can try assigning one lock per fork.
+    * A wrong solution
+        * We can try having all threads grab their right fork and then their left fork.
+        * But if every philosopher grabs their right fork at the same time, then no philosophers can
+          grab their left fork.
+        * This results in a deadlock due to hold-and-wait and circular-wait.
+    * Recall: deadlock conditions discussed previously
         * Hold-and-wait
         * Circular wait
         * Mutual exclusion
         * No preemption
     * We can break any of these conditions to avoid a deadlock.
 * Possible solutions
-    * At least one philosopher grabs forks in a different order.
-    * Use condition variables.
+    * We can have at least one philosopher grab forks in a different order. E.g., have one
+      philosopher grab their left fork and then the right fork while having all other philosophers
+      grab their right fork and then the left fork. This breaks the hold-and-wait condition since
+      there will be at least one philosopher who can't grab any fork.
+    * We can use condition variables.
         * Grab the left lock. Try the right lock. Wait for the signal. When done eating, signal.
-        * When waiting, it gives up the left lock.
+        * The key point here is that, when waiting (`pthread_cond_wait`), it gives up the left lock.
+        * This prevents the circular-wait condition from occurring.
 
       ```c
       #include <pthread.h>
