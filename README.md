@@ -10,3 +10,4 @@ This repo contains lecture summary notes and in-class activities.
 * [Memory Management](06-memory-management.md)
 * [Threads](07-threads.md)
 * [Synchronization](08-synchronization.md)
+* [File I/O](00-file-io.md)
