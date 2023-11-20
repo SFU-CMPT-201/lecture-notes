@@ -824,11 +824,20 @@
 * For a detailed description, read the section on dining philosophers in OSTEP's [Chapter 31
   Semaphore](https://pages.cs.wisc.edu/~remzi/OSTEP/threads-sema.pdf).
 * Problem Description
-    * Multiple threads sharing a buffer.
-    * Producer threads place items into the buffer
-        * Must wait if the buffer is full
-    * Consumers threads take items from the buffer
-        * Must wait if buffer is empty
+    * Multiple threads share a buffer.
+    * Producer threads place items into the buffer.
+        * They must wait if the buffer is full.
+    * Consumers threads take items from the buffer.
+        * They must wait if buffer is empty.
+    * The buffer emulates an infinite buffer with a limited size.
+        * The producers place items from index 0 to higher indices, one at a time.
+        * The consumers also remove items from index 0 to higher indices, one at a time.
+        * When the producers place an item at the highest index, they go back to index 0, and place
+          items from index 0 to higher indices again. In other words, producers place items in a
+          circular fashion.
+        * Likewise, when the consumers remove an item at the highest index, they go back to index 0,
+          and remove items from index 0 to higher indices again. In other words, consumers also
+          remove items in a circular fashion.
 * Possible solutions
     * Using one lock: we could use one mutex that all threads use when they access the buffer.
         * This is inefficient because all threads need to compete and check for availability.
