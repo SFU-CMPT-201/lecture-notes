@@ -3,7 +3,7 @@
 * We can write programs that communicate with each other via network programming.
 * There are many good resources on the Internet, but [Beej's Guide to Network
   Programming](https://beej.us/guide/bgnet/) has traditionally been popular.
-* Our recommended textbook, The Linux Programming Interface, is also a great place to get more
+* Our recommended textbook, The Linux Programming Interface, is also a great resource to get more
   details.
 
 ## Basics of the Networking Stack
@@ -116,6 +116,7 @@ close                   close
 
 ## Datagram Socket Sequence (UDP)
 
+```bash
 Server                  Client
 ------                  ------
 socket
@@ -125,6 +126,7 @@ recvfrom <------------- sendto
 sendto   -------------> recvfrom
 
 close                   close
+```
 
 * No active or passive socket.
 * `sendto` needs to specify the receiver's address every time.
