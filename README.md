@@ -12,3 +12,5 @@ This repo contains lecture summary notes and in-class activities.
 * [Synchronization](08-synchronization.md)
 * [File I/O](09-file-io.md)
 * [Network Programming](10-network-programming.md)
+* [IPC](11-ipc.md)
+* [Basic Cryptography](12-basic-crypto.md)

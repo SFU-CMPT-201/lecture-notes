@@ -7,39 +7,39 @@
 
 ## Pipes
 
-* You already know shell pipes. For example,
+* We already know shell pipes. For example,
     * `ps aux | grep bash`
     * `|` is a pipe.
     * The output of the first becomes input to the second.
-* You can also use pipes programmatically.
+* We can also use pipes programmatically.
     * `int pipe(int filedes[2])`
-    * `man 7 pipe` gives you an overview in detail.
+    * `man 7 pipe` gives us an overview in detail.
 * The function returns two file descriptors.
-    * `filedes[0]` gives you the read end.
-    * `filedes[1]` gives you the write end.
+    * `filedes[0]` gives us the read end.
+    * `filedes[1]` gives us the write end.
 * A pipe has the following characteristics.
     * It uses a buffer in the kernel.
     * It is unidirectional.
     * It is a byte stream.
-* Since a pipe returns file descriptors, you can use regular file I/O functions from `stdio`.
-    * You can use both non-buffered I/O (e.g., `read()`, `write()`) and buffered I/O (e.g.,
+* Since a pipe returns file descriptors, we can use regular file I/O functions from `stdio`.
+    * We can use both non-buffered I/O (e.g., `read()`, `write()`) and buffered I/O (e.g.,
       `fprintf()`, `fscanf()`).
 * A typical use case is parent-child communication.
-    * First you create a pipe, and then you call `fork()` to create a child.
+    * First we create a pipe, and then we call `fork()` to create a child.
     * Both file descriptors (`filedes[0]` and `filedes[1]`) will be available for both the parent
       and the child. This is because memory is cloned.
     * After that, the parent and the child can communicate with each other with the pipe.
 * An important point: typically each process uses a different end. In other words, each process
   closes the one that they don't use.
-    * For example, if you want the child to write to the pipe and the parent to read from the pipe,
-      you close the write end for the parent (`close(filedes[1])`) and you close the read end for
-      the child (`close(filedes[0])`). Then, you write to the pipe for the child and read from the
+    * For example, if we want the child to write to the pipe and the parent to read from the pipe,
+      we close the write end for the parent (`close(filedes[1])`) and we close the read end for
+      the child (`close(filedes[0])`). Then, we write to the pipe for the child and read from the
       pipe for the parent.
     * Take a look at the example from `man pipe`.
 * Another important point: `PIPE_BUF`
     * `man 7 pipe` has a `PIPE_BUF` section that describes this in detail.
-    * If you call `write()` with less than `PIPE_BUF` bytes, it will be atomic.
-    * If you call `write()` with more than `PIPE_BUF` bytes, it may be non-atomic.
+    * If we call `write()` with less than `PIPE_BUF` bytes, it will be atomic.
+    * If we call `write()` with more than `PIPE_BUF` bytes, it may be non-atomic.
     * "POSIX.1 requires `PIPE_BUF` to be at least 512 bytes.  (On Linux, `PIPE_BUF` is 4096 bytes.)"
     * However, the behavior depends on the blocking status. Again, the `PIPE_BUF` section of `man 7
       pipe` has the details.
@@ -53,21 +53,21 @@
         * When the parent gets 0 from `read()`, it knows that all child processes have closed the
           write end.
 * `int dup2(int oldfd, int newfd)`
-    * If you want to redirect one program's standard output to another program's standard input
-      (just as you would with a shell pipe, `|`), you can combine `dup2()` and `pipe()`.
+    * If we want to redirect one program's standard output to another program's standard input
+      (just as we would with a shell pipe, `|`), we can combine `dup2()` and `pipe()`.
     * The `dup2()` system call creates a copy of the file descriptor `oldfd` using the file
       descriptor number specified in `newfd`.
-    * You can redirect all your program's standard output to the write end of the pipe.
-        * If you call `dup2(filedes[1], STDOUT_FILENO)`, it duplicates `filedes[1]` to
-          `STDOUT_FILENO`. Thus, if your program writes to `STDOUT_FILENO`, it will write to
+    * We can redirect all our program's standard output to the write end of the pipe.
+        * If we call `dup2(filedes[1], STDOUT_FILENO)`, it duplicates `filedes[1]` to
+          `STDOUT_FILENO`. Thus, if our program writes to `STDOUT_FILENO`, it will write to
           `filedes[1]`, i.e., the write end of the pipe.
-    * You can redirect all your pipe's input to the standard input.
-        * If you call `dup2(filedes[0], STDIN_FILENO)`, it duplicates `filedes[0]` to
-          `STDIN_FILENO`. Thus, if your program reads from `STDIN_FILENO`, it will read from
+    * We can redirect all our pipe's input to the standard input.
+        * If we call `dup2(filedes[0], STDIN_FILENO)`, it duplicates `filedes[0]` to
+          `STDIN_FILENO`. Thus, if our program reads from `STDIN_FILENO`, it will read from
           `filedes[0]`, i.e., the read end of the pipe.
 * `FILE *popen(const char *command, const char *mode)`
-    * `popen()` is a convenient function if you want to create a pipe to an existing program.
-    * `command` is the program you want to execute and connect with a pipe.
+    * `popen()` is a convenient function if we want to create a pipe to an existing program.
+    * `command` is the program we want to execute and connect with a pipe.
     * `mode` determines read (`"r"`) from the command or write (`"w"`) to the command.
     * Use `pclose()` to close.
 * Activity: modify the example in `man pipe` as follows.
@@ -166,7 +166,7 @@
 
 ## Memory Mapping
 
-This is a slight detour for IPC but you will see the reason soon.
+This is a slight detour for IPC but we will see the reason soon.
 
 * `void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)`
     * Creates what's known as a *memory mapping*.
@@ -180,16 +180,16 @@ This is a slight detour for IPC but you will see the reason soon.
     * Returns a pointer to the beginning of the new mapping.
 * There are two types of memory mappings.
     * *File* mapping
-        * It maps a file to a memory region, allowing you to use a file as a memory region.
-        * File I/O becomes memory access. Instead of `read()`/`write()` calls, you can just use
+        * It maps a file to a memory region, allowing us to use a file as a memory region.
+        * File I/O becomes memory access. Instead of `read()`/`write()` calls, we can just use
           pointers and variables to read from or write to a file.
         * This is called a *memory-mapped file*.
     * *Anonymous* mapping
-        * Another way to allocate memory to your process (in addition to `sbrk()`). `malloc()` uses
+        * Another way to allocate memory to our process (in addition to `sbrk()`). `malloc()` uses
           both `sbrk()` and `mmap()`.
-* In addition, you can have *shared* or *private* memory mappings.
+* In addition, we can have *shared* or *private* memory mappings.
     * Multiple processes can share a mapping.
-        * For example, you can create an file/anonymous mapping and `fork()` a child. Since memory
+        * For example, we can create an file/anonymous mapping and `fork()` a child. Since memory
           is cloned, the parent and the child will share the same mapping.
         * Or, multiple processes can map the same file.
     * A process can create a private mapping.
@@ -274,7 +274,7 @@ This is a slight detour for IPC but you will see the reason soon.
 
 * Shared memory uses memory mapping across processes.
 * `man 7 shm_overview` provides an overview.
-    * You can first open a shared memory object (using `shm_open()` as below), truncate the size
+    * We can first open a shared memory object (using `shm_open()` as below), truncate the size
       (using `ftruncate()` as below), and create a memory mapping with the shared memory object
       (using `mmap()` as below).
 * `int shm_open(const char *name, int oflag, mode_t mode)`
@@ -285,21 +285,21 @@ This is a slight detour for IPC but you will see the reason soon.
       object*.
         * This is just like creating a file. `/dev/shm/` is the directory for all shared memory
           object files, e.g. `ls /dev/shm/somename`.
-    * `O_CREAT` flag determines whether you open a new object or an existing one.
+    * `O_CREAT` flag determines whether we open a new object or an existing one.
     * `mode` is for permissions on creation.
     * Refer to `man shm_open` for the details.
 * `int ftruncate(int fd, off_t length)`
-    * When a memory object is created, the size is 0. You need to use `ftruncate()` to change the
+    * When a memory object is created, the size is 0. We need to use `ftruncate()` to change the
       size.
     * Refer to `man ftruncate`.
 * `void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)`
-    * Once you create a shared memory object and adjust the size, you need to create a memory
+    * Once we create a shared memory object and adjust the size, we need to create a memory
       mapping for it.
-    * You need to give the shared memory object file descriptor as `fd`.
+    * We need to give the shared memory object file descriptor as `fd`.
 * `int munmap(void *addr, size_t length)`
-    * When you no longer needs to access the shared memory, you can unmap it.
+    * When we no longer need to access the shared memory, we can unmap it.
 * `int shm_unlink(const char *name)`
-    * One you are done with the shared memory, you can removes the shared memory object.
+    * One we are done with the shared memory, we can remove the shared memory object.
     * This removes the shared memory object file from `/dev/shm/`.
     * However, if there are processes that still use the shared memory object, they can keep using
       it.
