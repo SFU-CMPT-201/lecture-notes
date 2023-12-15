@@ -157,7 +157,7 @@ plain text ----------->  cipher text -----------> plain text
     * This digital certificate is essentially saying that "VeriSign proves that the public key on
       this document belongs to Instagram."
     * VeriSign then sends the digital certificate to Instagram.
-    * When your browser connects to Instagram, it sends the digital certificate.
+    * When your browser connects to Instagram, Instagram sends the digital certificate.
     * Now, the digital certificate contains VeriSign's signature. As long as you verify this
       signature, you can be assured (i) that the document was indeed signed by VeriSign and (ii)
       that the public key belongs to Instagram.
