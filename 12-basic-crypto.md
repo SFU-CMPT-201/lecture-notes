@@ -165,7 +165,8 @@ plain text ----------->  cipher text -----------> plain text
       digital signature discussion above if you need a refresher.)
     * For well-known digital certificate authorities like VeriSign, OS vendors (e.g., Microsoft,
       Apple, etc.) have trust relationships. Thus, their public keys are shipped with an OS. For
-      example, Windows, MacOS, Android, iOS, etc. all have public keys of VeriSign.
+      example, Windows, MacOS, Android, iOS, etc. all have public keys of VeriSign as well as other
+      digital certificate authorities.
     * Thus, your OS can verify VeriSign's signature using VeriSign's public key shipped with the OS.
     * If the OS is not compromised, this whole process is secure. If the OS is indeed compromised,
       this whole process is not secure.
