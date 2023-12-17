@@ -81,6 +81,8 @@ plain text ----------->  cipher text -----------> plain text
 * Public key crypto (or asymmetric key crypto)
 
   ```bash
+  (This is an example only regarding encryption/decryption. There are other use cases.)
+
               encryption                 decryption
               with pub key               with priv key
   plain text -------------> cipher text --------------> plain text
