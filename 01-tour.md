@@ -281,4 +281,4 @@ Container1          Container2
   exercise](https://docs.github.com/en/get-started/quickstart/hello-world) that does branching, pull
   requests, merging, etc.
 * `git pull` is used to fetch from a remote repo. Read further from the [Atlassian's
-  Tutorial][(https://www.atlassian.com/git/tutorials/syncing/git-pull).
+  Tutorial](https://www.atlassian.com/git/tutorials/syncing/git-pull).
