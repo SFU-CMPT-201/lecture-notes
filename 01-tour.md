@@ -184,8 +184,8 @@ Container1          Container2
 ### Event-Driven
 
 * The kernel is event-driven, i.e., it responds to an event.
-* An event can be a hardware *interrupt* (e.g., mouse click, keyboard press), program *syscalls*
-  (e.g., printing out), and *signals* (e.g., SIGINT, SIGTERM).
+* An event can be a hardware *interrupt* (e.g., mouse click, keyboard press), a program *syscall*
+  (e.g., printing out), and a *signal* (e.g., SIGINT, SIGTERM).
 
 ### User Mode vs. Kernel Mode
 

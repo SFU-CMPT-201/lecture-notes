@@ -74,6 +74,8 @@
     * Suppose 3 processes arrive around the same time but gets added to the ready queue in the order
       of P1, P2, P3.
     * What is the waiting time?
+        * Waiting time is the easiest to calculate, so we'll use it to assess how good an algorithm
+          is.
         * P1 = 0; P2  = 24; P3 = 27
     * What is the average waiting time?
         * (0 + 24 + 27) / 3 = 17
@@ -96,6 +98,7 @@
 * Let's try something where a long process doesn't sabotage all other processes.
 * Among the remaining processes, pick the process with the shortest execution time.
 * Assume for the sake of discussion, we know how long each process takes.
+    * In reality, this is not always possible. However, *estimation* algorithms do exist.
 * Non-preemptive
 * Example
     * Execution times
@@ -114,7 +117,7 @@
 
 ### Shortest Remaining Time First (SRTF)
 
-* Assume for the sake of discussion, we know how long each process takes.
+* Again, for the sake of discussion, assume we know how long each process takes.
 * Schedule the process with the shortest remaining execution time.
 * This one's *preemptive*.
 * Example
@@ -134,18 +137,17 @@
           remaining time one.
         * At time 7, P2 is done. The scheduler picks P4.
         * At time 11, P4 is done. The scheduler runs P1.
-* This and SJF need to know how long processes take.
-    * This is obviously a problem since we don't know the future.
+* This and SJF (the previous one) need to know how long processes take.
+    * This is obviously a problem since we don't know the future. But again, estimation algorithms
+      do exist.
 * Side note: Interactive vs. batch
     * Interactive
         * Mainly user driven
         * Regular desktop applications
     * Batch
-        * You run a program from start to end. No interaction in the middle.
-        * Compiling a program
-        * Data analytics
-    * SJF & SRTF are mainly for batch processes (jobs). There are techniques developed to estimate
-      how long a batch job takes, and we can use the estimates for scheduling.
+        * You run a program from start to end. No interaction in the middle. E.g., compiling a
+          program, data analytics.
+    * SJF & SRTF are mainly for batch processes (jobs) (based on execution time estimation).
 
 ### Round Robin
 
@@ -182,9 +184,9 @@
 * This is a priority-based scheduling algorithm but avoids starvation.
 * We group processes based on categories, e.g., foreground process category, background process
   category, system (OS) process category.
-* Each category gets a priority value (separate from process priority values). E.g., the system
-  processe category can have the highest priority (priority 0), the foreground category next
-  (priority 1), and the background category the lowest (priority 2).
+* Each category gets a priority value. E.g., the system process category can have the highest
+  priority (priority 0), the foreground category next (priority 1), and the background category the
+  lowest (priority 2).
 * The ready queue is partitioned into multiple queues, one queue per category. E.g., we could have
   one queue for system processes, another for foreground processes, and the third for background
   processes.
@@ -218,8 +220,8 @@
         * We preempt and run a process from priority 2 queue.
         * We repeat this and go back to pick a process from priority 0 and then priority 1 queues.
           However, we stop there and don't run a process from priority 2 queue.
-        * So we go back to pick a process from priority 0 queue. However, we stop there and don't run a
-          process from priority 1 queue.
+        * We then go back to pick a process from priority 0 queue again. However, we stop there and
+          don't run a process from priority 1 queue.
         * If we repeat the above steps, we give more CPU time for priority 0 queue than priority 1
           queue, and also more CPU time for priority 1 queue than priority 2 queue.
 * When we pick a process from each queue, we also use a scheduling algorithm. We do not need to use
@@ -272,7 +274,7 @@
 * Linux categorizes processes into two classes.
     * Real-time processes (priority values 0 to 99)
     * Normal processes (priority values 100 to 139)
-* We can use nice value to change/assign a priority for a normal process.
+* We can use `nice` value to change/assign a priority for a normal process.
     * Nice values range from -20 to +19 (lower nice == higher priority).
     * The default nice value is 0.
     * The nice value of -20 maps to priority 100.
