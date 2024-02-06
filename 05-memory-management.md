@@ -85,14 +85,20 @@
         * We traverse the linked list and allocate the smallest free block that is big enough.
         * We keep the remaining free space free for later requests.
         * An advantage of this is that it reduces wasted memory space.
-        * A disadvantage is that it must search the entire list, unless ordered by size (which has
+        * A disadvantage is that it must search the entire list (unless ordered by size which has
           additional implementation complexity).
-        * Another disadvantage is that it may create many small free blocks, leading to external
-          fragmentation (which we discussed in [Virtual Memory](05-virtual-memory.md)).
+        * Another disadvantage is that it may create many small free blocks, leading to more chances
+          of *external fragmentation* (explained below).
     * Worst-fit
         * We traverse the linked list and allocate the largest free block.
         * Ad advantage is that it produces large leftover free blocks.
         * A disadvantage is that it must search the entire list.
+* External fragmentation
+    * We might run into a scenario where we have left with many small blocks that can't satisfy a
+      large allocation request, even if the total sum of all free blocks exceed the size of the
+      large allocation. This is called external fragmentation.
+    * There's a similar problem called *internal* fragmentation. We will discuss it in [Virtual
+      Memory](06-virtual-memory.md)
 
 ## Memory Deallocation
 
