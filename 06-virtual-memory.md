@@ -74,6 +74,7 @@
   and (ii) isolation of each process's memory access
 * Simply put, a process uses *virtual* memory instead of physical memory.
 * Virtual memory consists of two components, virtual address space and address translation.
+* Virtual memory is a good example that demonstrates the power of *abstractions*.
 
 ### Virtual Address Space
 

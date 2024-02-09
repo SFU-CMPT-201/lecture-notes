@@ -16,6 +16,15 @@
     * [Chapter 14 Interlude: Memory API](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-api.pdf)
     * [Chapter 15 Free-Space Management](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-freespace.pdf)
 
+## Prerequisites
+
+This lecture assumes that you know the following already.
+
+* How to use `malloc()` and `free()` in C and understand what they do.
+* How to implement a singly- and doubly-linked list in C.
+* The stack and the heap, and how a program's variables use those in C and how they are located in
+  them.
+
 ## `brk()` and `sbrk()`
 
 * `brk()` and `sbrk()` allow us to increase the heap size by moving the *program break*.
