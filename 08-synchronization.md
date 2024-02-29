@@ -202,6 +202,8 @@
     * A thread safe function either does not access shared resources or provides proper protection
       for its critical sections that access shared resources.
     * Reentrant vs nonreentrant functions
+        * A reentrant function is a function that produces the correct output even when it is
+          called again while executing (via different threads, signal handlers, etc.).
         * Reentrant functions don't use any shared (global or static) variables, thus thread safe.
         * A common technique to implement a reentrant function: any info returned to the caller or
           maintained across function calls should use caller-allocated buffers. E.g., when calling
