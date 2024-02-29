@@ -30,9 +30,9 @@
     * An `unlock()` function that releases a lock.
 * For example, the pthread library provides a lock mechanism as follows.
     * `pthread_mutex_t`: the data type to define a lock.
-    * `int pthread_mutex_lock(pthread_mutex_t \*mutex)`: the lock function that grabs the lock passed
+    * `int pthread_mutex_lock(pthread_mutex_t *mutex)`: the lock function that grabs the lock passed
       as the argument.
-    * `int pthread_mutex_unlock(pthread_mutex_t \*mutex)`: the unlock function that releases the lock
+    * `int pthread_mutex_unlock(pthread_mutex_t *mutex)`: the unlock function that releases the lock
       passed as the argument.
     * Other languages (e.g., Java, Python, etc.) provide similar lock mechanisms with different type
       names and function names.
