@@ -148,7 +148,7 @@
 ## Lock Usage
 
 * Atomicity
-    * Using a lock on a critical section makes all operations within the critical section *atomic*,
+    * Using a lock on a section of code makes all operations within the section *atomic*,
       i.e., all operations would run as if they were a single operation. Going back to the previous
       data race example, if we used a lock for updating `cnt`, all sub-operations (reading from
       memory, updating `cnt`, and writing back to memory) would run without getting any interference
