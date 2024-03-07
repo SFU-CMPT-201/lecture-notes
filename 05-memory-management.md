@@ -100,7 +100,7 @@ This lecture assumes that you know the following already.
           of *external fragmentation* (explained below).
     * Worst-fit
         * We traverse the linked list and allocate the largest free block.
-        * Ad advantage is that it produces large leftover free blocks.
+        * An advantage is that it produces large leftover free blocks.
         * A disadvantage is that it must search the entire list.
 * External fragmentation
     * We might run into a scenario where we have left with many small blocks that can't satisfy a

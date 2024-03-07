@@ -101,10 +101,10 @@
 
 ### Data Race Activity & Problem
 
-* Activity: write a program that has two additional threads. Define a global variable called
-  `cnt`. Two new threads should each run a while loop (10000000 times) that keeps incrementing
-  `cnt`. The main thread should wait on both threads, and when everything's done, should
-  print out the value of `cnt`. Run it multiple times and see the outputs.
+* Activity: write a program that has two additional threads. Define a global variable called `cnt`
+  and initialize it to 0. Two new threads should each run a loop 10,000,000 times that keeps
+  incrementing `cnt`. The main thread should wait on both threads, and when everything's done,
+  should print out the value of `cnt`. Run it multiple times and see the outputs.
     * The outputs should be *non-deterministic*, meaning the behavior should be different every time
       the program runs.
     * This is as oppose to *deterministic* behavior where a program behaves the same way every time
@@ -113,10 +113,11 @@
 * This problem is known as the *data race problem*.
     * If you run multiple threads on different cores, they run at the same time.
     * If you perform an addition in a C program, it appears to be a single operation but it is not.
-    * Adding an integer to a variable consists of multiple steps.
+    * Adding an integer to a variable consists of multiple steps roughly as follows.
         * Load the variable's data from memory.
         * Perform the addition.
         * Store the result back to memory.
+        * (There are more steps in reality, but this is enough for our discussion.)
     * Thus, if you perform an addition on a global variable in two different threads, they will each
       perform the above steps at the same time. Thus, the following scenario could happen.
         * Assume we are dealing with a variable (`cnt`) that currently contains 5 as its data.
@@ -135,3 +136,8 @@
           memory.
     * This is called the data race problem, where different threads *race* to update data and
       overwrite each other's result.
+    * More generally, a *race condition* is a condition in which the correctness of a program
+      depends on the timing and/or order of operations. Between a data race and a race condition,
+      there is significant overlap but they are not the same thing. We don't get into the details in
+      this course, but if you are interested, you can [read more about
+      it](https://blog.regehr.org/archives/490).

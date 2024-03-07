@@ -506,16 +506,16 @@
       CPU. This means that other processes/threads can utilize the CPU to perform useful work.
 * The pthread library provides support for condition variables as follows.
     * `pthread_cond_t`: the data type to define a condition variable.
-    * `pthread_cond_signal(pthread_cond_t \*cond)`: the function that sends a signal to `cond`. If
+    * `pthread_cond_signal(pthread_cond_t *cond)`: the function that sends a signal to `cond`. If
       there is a thread waiting on `cond`, this wakes up the thread.
-    * `pthread_cond_wait(pthread_cond_t \*cond, pthread_mutex_t \*mutex)`: the function that waits
+    * `pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)`: the function that waits
       for a signal sent to `cond`.
         * For `mutex`, it behaves like a lock-safe sleep. Internally, it releases `mutex`, waits for
           a signal on `cond`, and (once a signal is sent to `cond`,) wakes up and re-grabs `mutex`.
           In other words, it does not go to sleep while holding a lock.
         * This is because doing so would unnecessarily prevent other threads from grabbing the lock.
         * See the example below for an illustration.
-    * `pthread_cond_broadcast(pthread_cond_t \*cond)`: the function that wakes up all threads
+    * `pthread_cond_broadcast(pthread_cond_t *cond)`: the function that wakes up all threads
       waiting on `cond`.
         * The difference is that `pthread_cond_signal()` wakes up just a single thread (out of all
           threads waiting on `cond`)---but we do not have control over which one to wake up.
@@ -673,13 +673,13 @@
     * You first need to initialize the semaphore with the max number of threads that you want to
       allow to grab the lock.
 * In pthread, there are three functions to note.
-    * `sem_init(sem_t \*sem, int pshared, unsigned int value)`: the function that initializes the
+    * `sem_init(sem_t *sem, int pshared, unsigned int value)`: the function that initializes the
       count to `value` for `sem`. This allows up to `value` number of threads to grab `sem`.
       `pshared` indicates if `sem` is for threads (`0`) or processes (`1`).
-    * `sem_wait(sem_t \*sem)`: the function that grabs `sem`. Internally, if the count is 0, it
+    * `sem_wait(sem_t *sem)`: the function that grabs `sem`. Internally, if the count is 0, it
       blocks (i.e., does not return) until the count becomes greater than 0. If the count is (or
       becomes) greater than 0, it decrements the count by one and returns.
-    * `sem_post(sem_t \*sem)`: the function that "releases" `sem`. Internally, it increments the
+    * `sem_post(sem_t *sem)`: the function that "releases" `sem`. Internally, it increments the
       count by one.
     * `sem_init(&sem, 0, 1)` is the same as a mutex.
 
