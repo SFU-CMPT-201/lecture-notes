@@ -148,7 +148,7 @@ This lecture assumes that you know the following already.
            |            | 16
            |------------|
            |(Header)    | 15
-           |size = 240  |    (size = total_free - header_size = 256 - 16 = 240)
+           |size = 256  |    (size = total_free)
   head --> |next = null | 0
            +------------+
   ```
@@ -171,7 +171,7 @@ This lecture assumes that you know the following already.
            |            |
            |------------|
            |(Header)    | 131
-           |size = 124  |    (size = 256 - 116 - 16 = 124)
+           |size = 140  |    (size = 256 - 116 = 140)
   head --> |next = null | 116
            |------------|
            |            | 115
@@ -179,7 +179,7 @@ This lecture assumes that you know the following already.
            |            | 16
            |------------|
            |(Header)    | 15
-           |size = 100  |
+           |size = 116  |
            |next = null | 0
            +------------+
   ```
@@ -194,7 +194,7 @@ This lecture assumes that you know the following already.
            |            | 198
            |------------|
            |(Header)    | 197
-           |size = 58   |    (size = 256 - 182 - 16)
+           |size = 74   |    (size = 256 - 182)
   head --> |next = null | 182
            |------------|
            |            | 181
@@ -202,7 +202,7 @@ This lecture assumes that you know the following already.
            |            | 132
            |------------|
            |(Header)    | 131
-           |size = 50   |
+           |size = 66   |
            |next = null | 116
            |------------|
            |            | 115
@@ -210,7 +210,7 @@ This lecture assumes that you know the following already.
            |            | 16
            |------------|
            |(Header)    | 15
-           |size = 100  |
+           |size = 116  |
            |next = null | 0
            +------------+
   ```
@@ -225,7 +225,7 @@ This lecture assumes that you know the following already.
            |            | 198
            |------------|
            |(Header)    | 197
-           |size = 58   |
+           |size = 74   |
            |next = null | 182
            |------------|
            |            | 181
@@ -233,7 +233,7 @@ This lecture assumes that you know the following already.
            |            | 132
            |------------|
            |(Header)    | 131
-           |size = 50   |
+           |size = 66   |
            |next = null | 116
            |------------|
            |            | 115
@@ -241,7 +241,7 @@ This lecture assumes that you know the following already.
            |            | 16
            |------------|
            |(Header)    | 15
-           |size = 100  |
+           |size = 116  |
   head --> |next = 182  | 0 (next points to the previous head at 182)
            +------------+
   ```
@@ -256,7 +256,7 @@ This lecture assumes that you know the following already.
            |            | 198
            |------------|
            |(Header)    | 197
-           |size = 58   |
+           |size = 74   |
            |next = null | 182
            |------------|
            |            | 181
@@ -264,7 +264,7 @@ This lecture assumes that you know the following already.
            |            | 132
            |------------|
            |(Header)    | 131
-           |size = 50   |
+           |size = 66   |
   head --> |next = 0    | 116  (next points to the previous head at 0)
            |------------|
            |            | 115
@@ -272,7 +272,7 @@ This lecture assumes that you know the following already.
            |            | 16
            |------------|
            |(Header)    | 15
-           |size = 100  |
+           |size = 116  |
            |next = 182  | 0
            +------------+
   ```
@@ -306,7 +306,7 @@ This lecture assumes that you know the following already.
            |            | 16
            |------------|
            |(Header)    | 15
-           |size = 240  |
+           |size = 256  |
   head --> |next = null | 0
            +------------+
   ```
