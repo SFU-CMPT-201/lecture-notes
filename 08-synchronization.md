@@ -841,7 +841,9 @@
           and remove items from index 0 to higher indices again. In other words, consumers also
           remove items in a circular fashion.
 * Possible solutions
-    * Using one lock: we could use one mutex that all threads use when they access the buffer.
+    * Using one lock: we could use one mutex that all threads use when they access the buffer. The
+      threads also need to use a condition variable so that a producer can notify a consumer
+      whenever there's a new item available.
         * This is inefficient because all threads need to compete and check for availability.
     * Using semaphores: semaphores lead to a simpler and more elegant solution.
 

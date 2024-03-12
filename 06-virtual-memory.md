@@ -259,9 +259,9 @@
     * If page numbers use *n* bits, the maximum possible number of pages is *2^n - 1*.
     * If offsets use *m* bits, the maximum possible page size is *2^m - 1*.
     * For example, suppose the page size is 4 KB (i.e., *m* is 12) and we use a 32-bit architecture.
-      *n* is then 20 (32 - 12), which means that we can have *2^20 - 1* pages. This is 1M pages and
-      the page table should be able to handle this many pages. There are many solutions that exist
-      to handle a large number of pages in a page table, such as hierarchical page tables, which we
+      *n* is then 20 (32 - 12), which means that we can have *2^20* pages. This is 1M pages and the
+      page table should be able to handle this many pages. There are many solutions that exist to
+      handle a large number of pages in a page table, such as hierarchical page tables, which we
       don't get to in this course.
 * Modern OSs typically use paging rather than segmentation.
 
