@@ -34,12 +34,12 @@
 ## Activity: `exec()`
 
 * `man 3 exec`
+    * Pay attention to what the man page says about `arg0`.
 * An `exec()` function executes a new program. When it is called, the calling process removes the
   currently-running program from memory, loads the new program into memory, and starts executing the
   new program. This means that the calling process is completely replaced with the new program.
 * Write a program that creates a child process. The parent should call any one of `exec` functions
   that executes `ls -al`. The child should execute `exa -al`.
-    * `-al` actually needs to be `-a -l`.
 
 ## Activity: `wait()`
 
