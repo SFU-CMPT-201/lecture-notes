@@ -1,5 +1,7 @@
 # File I/O
 
+There are three things to know before we look at the actual system calls.
+
 ## Basic System Calls
 
 There are five basic system calls for file I/O.
@@ -151,6 +153,8 @@ There are five basic system calls for file I/O.
     * For example, suppose a user program has user data to write. If it uses `fprintf()`, it writes
       the data to the associated buffer in memory. At some point later, the data in the buffer will
       be passed to the kernel via `write()`. Then the kernel will write to the actual disk.
+    * You can get the file stream from a file descriptor with `fdopen()`. You can get the file
+      descriptor from a file stream with `fileno()`.
 * Activity
     * Write a program that `open()`s a file `tmp`, `write()`s a string to `tmp`, and goes into an
       infinite loop that `sleep()`s for 30 seconds for each iteration. Run it in the background and
@@ -257,6 +261,11 @@ There are five basic system calls for file I/O.
 * The UNIX I/O model is often referred to as the "everything is a file" model. A file is used not
   only for actual files on stored on disks but also for all I/O devices such as the terminal, the
   network, etc.
+* This means that even for a device (e.g., a terminal, a keyboard, a network interface card), there
+  is a "file" associated with it, and we can use the same system calls (`open()`, `read()`,
+  `write()`, `close()`, etc.) to interact with it. This is the universality of I/O. E.g., getting a
+  key press from a keyboard is getting an input from the file associated with the keyboard. Sending
+  data to a network is writing to the file associated with the network.
 * Example: The `/proc` file system
     * It shows system and process information.
     * The kernel dynamically populates the information in the form of files. But they are not real
