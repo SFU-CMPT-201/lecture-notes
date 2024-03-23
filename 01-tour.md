@@ -191,13 +191,13 @@ Container1          Container2
 
 * Typically, an OS kernel runs in kernel mode. User applications run in user mode.
 * A modern CPU can run in one of those two modes at a given moment.
-* Kernel mode allows full privilege and full access of the hardware.
+* Kernel mode allows full privilege and full access to the hardware.
 * User mode is more restricted than kernel mode. It cannot run certain instructions (e.g.,
-  instructions that allow direct access of hardware). It also cannot access certain regions of
-  memory set by the code that runs in kernel mode.
-* This is different from normal user vs. super user. A super user is still a user (with
-  administrative permissions). A super user can do things that a normal user aren't allowed to do
-  and run programs that a normal user aren't allowed to run.
+  instructions that allow access to certain parts of hardware). It also cannot access certain
+  regions of memory set by the code that runs in kernel mode.
+* This is different from normal user vs. super user. A super user is still a user, but with full
+  administrative privileges. A super user can do things that a normal user isn't allowed to do
+  and run programs that a normal user isn't allowed to run.
 
 ### The Linux Kernel Map
 
