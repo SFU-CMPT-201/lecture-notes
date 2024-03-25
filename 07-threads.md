@@ -59,7 +59,7 @@
   +-----------+
   ```
 
-    * However, the stack is not share across different threads (that are in the same process). Each
+    * However, the stack is not shared across different threads (that are in the same process). Each
       thread gets its own stack.
     * Since creating a thread doesn't involve creating a new address space, it has less overhead
       than creating a process.
