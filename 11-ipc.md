@@ -150,6 +150,10 @@
     * Use `unlink()` to remove a FIFO, just like a file.
 * As long as a process knows `pathname`, it can access a FIFO. Thus, unrelated processes (assuming
   they all know `pathname`) can share a FIFO.
+    * Once a FIFO file is created, different processes use `open()`, `read()`, `write()`, etc.
+    * A FIFO is still unidirectional and it's typically for two processes.
+    * One process should open it for read and the other should open it for write.
+    * `open()` blocks until the other process calls `open()` as well.
 
 ## POSIX Message Queues
 
