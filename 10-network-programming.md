@@ -620,6 +620,16 @@ close                   close
     * `man epoll_ctl`: `epoll_ctl()` allows us to add, remove, or modify a file descriptor to the
       epoll instance.
     * `man epoll_wait`: `epoll_wait()` waits for a file descriptor to be available for I/O.
+        * The second argument `struct epoll_event *events` is the most important one.
+        * It is a buffer passed to `epoll_wait()`.
+        * Each entry is for a file descriptor that has something new to process.
+        * This is the same `struct epoll_event` that you store with `epoll_ctl()` with its last
+          argument (`struct epoll_event *_Nullable event`).
+        * The kernel stores `struct epoll_event` you pass to `epoll_ctl()`, and when the associated
+          file descriptor has something new to process, the kernel returns it back to you.
+        * Typically, you store at least the file descriptor, so that you know which file
+          descriptor has a new event to process.
+        * `man epoll_event` explains further about this.
 * Server example.
 
   ```c
