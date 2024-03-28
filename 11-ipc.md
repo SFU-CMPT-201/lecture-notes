@@ -276,7 +276,9 @@ This is a slight detour for IPC but we will see the reason soon.
 
 ## Shared Memory
 
-* Shared memory uses memory mapping across processes.
+* Shared memory allows sharing across *unrelated* processes.
+    * `mmap` with `MAP_SHARED | MAP_ANONYMOUS` allows memory sharing for *related* processes via
+      `fork()`.
 * `man 7 shm_overview` provides an overview.
     * We can first open a shared memory object (using `shm_open()` as below), truncate the size
       (using `ftruncate()` as below), and create a memory mapping with the shared memory object
