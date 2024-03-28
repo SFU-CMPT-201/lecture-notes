@@ -205,7 +205,7 @@ This is a slight detour for IPC but we will see the reason soon.
     * Private anonymous mapping: more memory gets allocated to the calling process. `fork()` copies
       the memory but each process has a private copy. In other words, changes to the mapped memory
       are not propagated to the child (or vice versa).
-    * Shared file mapping: a file is ampped to a process as a shared mapping. In other words, if
+    * Shared file mapping: a file is mapped to a process as a shared mapping. In other words, if
       multiple processes map the same file, changes will be propagated to all the processes and the
       actual file will be written.
     * Shared anonymous mapping: more memory gets allocated to the calling process. Moreover, memory
