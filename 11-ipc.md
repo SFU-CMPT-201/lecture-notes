@@ -154,6 +154,9 @@
     * A FIFO is still unidirectional and it's typically for two processes.
     * One process should open it for read and the other should open it for write.
     * `open()` blocks until the other process calls `open()` as well.
+* Activity: write two programs.
+    * One program should create a FIFO and write a string to it.
+    * The other program should read the string from the FIFO and print it out.
 
 ## POSIX Message Queues
 
