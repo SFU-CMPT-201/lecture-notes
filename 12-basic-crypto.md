@@ -25,11 +25,11 @@
 plain text ----------->  cipher text -----------> plain text
 ```
 
-* Comes from Greek word meaning "secret"
-* Cryptographers invent secret codes to attempt to hide messages from unauthorized observers
+* Comes from Greek word meaning "secret".
+* Cryptographers invented secret codes to hide messages from unauthorized observers.
 * Modern encryption:
     * Algorithms are public.
-    * Keys are secret and provide security
+    * Keys are secret and provide security.
     * May be symmetric (secret) or asymmetric (public). More below.
 * Cryptographic algorithms goal:
     * Given a key, it should be relatively easy to compute.
@@ -75,7 +75,7 @@ plain text ----------->  cipher text -----------> plain text
   ```
 
     * One key is shared between encryption and decryption.
-    * This assumes that there is a way to shared the secret key in a secure fashion.
+    * This assumes that there is a way to share the secret key in a secure fashion.
     * This was the only type of encryption prior to invention of public-key in 1970's.
 
 * Public key crypto (or asymmetric key crypto)
