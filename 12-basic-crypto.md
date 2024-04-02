@@ -179,4 +179,4 @@ plain text ----------->  cipher text -----------> plain text
       our OS.
     * In order to trust VeriSign's public key, we need to trust that our OS is not compromised.
     * This is a *chain of trust* and as long as the end of the chain (the *root of trust*) is
-      trustworthy, all is trustworthy. The root of trust in our scenario is the OS.
+      trustworthy, all is trustworthy. The *root of trust* in our scenario is the OS.
