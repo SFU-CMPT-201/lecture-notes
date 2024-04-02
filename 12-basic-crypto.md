@@ -110,7 +110,7 @@ plain text ----------->  cipher text -----------> plain text
     * This avoids pre-computation of all possible hashes in "rainbow tables" (available for download
       on the Internet). With a salt, pre-computation is not possible.
 * Secure digest
-    * This is often used to verify a downloaded file (as also discussed in A13).
+    * This is often used to verify a downloaded file.
     * A secure digest is a summary of a message.
     * A fixed-length that characterizes an arbitrary-length message.
     * This is typically produced by a cryptographic hash function, e.g., SHA-256.
