@@ -180,3 +180,90 @@ plain text ----------->  cipher text -----------> plain text
     * In order to trust VeriSign's public key, we need to trust that our OS is not compromised.
     * This is a *chain of trust* and as long as the end of the chain (the *root of trust*) is
       trustworthy, all is trustworthy. The *root of trust* in our scenario is the OS.
+
+## Activity: SSH Authentication with Public Key Cryptography
+
+One popular application of public key cryptography is SSH authentication/login. You might have done
+this before for other classes, but with our class discussion, you can now understand what is going
+on.
+
+* First, log in to a CSIL machine from our VM. Note that if you're not on campus, you need to first
+  use the VPN on your host (*not* on our VM) to be able to log in.
+* You can use one of the [Linux CPU
+  servers](https://www.sfu.ca/computing/about/support/csil/unix/how-to-use-csil-linux-cpu-server.html).
+* Create a new ssh public/private key pair. We will use an algorithm called *ed25519*. The command
+  is as follows.
+
+  ```bash
+  $ ssh-keygen -t ed25519 -C "your email address"
+  ```
+
+    * Replace `your email address` with an actual email address of yours. For example,
+
+      ```bash
+      $ssh-keygen -t ed25519 -C "steveyko@sfu.ca"`
+      ```
+
+    * You can use the default file location by pressing `<Enter>`.
+    * Choose a passphrase and remember it. This will be used when you access your private key.
+* The above command creates two files under `.ssh/`.
+    * One file is `id_ed25519` and the other is `id_ed25519.pub`.
+    * `id_ed25519` contains your private key. Try `cat ~/.ssh/id_ed25519` and check the content. It
+      should start with `-----BEGIN OPENSSH PRIVATE KEY-----` which indicates that it is a private
+      key.
+    * `id_ed25519.pub` contains your public key. Try `cat ~/.ssh/id_ed25519.pub` and check the
+      content. It should start with `ssh-ed25519`, indicating the algorithm.
+* As discussed above, you can share the public key with anybody. However, you need to protect the
+  private key as your secret.
+* SSH key pairs are typically used for SSH authentication. This is a different way of authenticating
+  yourself to a server than using a password.
+* The way it works is the following. On the server machine (i.e., the machine that you want to SSH
+  in to), you can add your public key to the `authorized_keys` file. This file is located in the
+  `$HOME/.ssh/` directory in your home directory (on the server machine). The `authorized_keys` file
+  contains a list of public keys that are allowed for public/private key pair authentication. On the
+  client side, you need to have your private key under the `$HOME/.ssh/` directory (on the client
+  machine), which proves to the server that you are the owner of the public key.
+* We will use our CSIL Linux machines to understand this further, but it requires some explanation
+  first.
+* A special thing about our CSIL Linux machines is that the machines all share the same home
+  directory. Thus, no matter which CSIL machine you log in to, you will see the same files in your
+  home directory.
+* What this means is that if you add your public key to the `$HOME/.ssh/authorized_keys` file from
+  one machine, this is all shared. Thus, you can log in to all other CSIL Linux machines from your
+  client machine as long as you have your private key on your client machine.
+* Now, a CSIL Linux machine doesn't have to be just an SSH server. You can use one CSIL Linux
+  machine as an SSH client and log in to another CSIL Linux machine as an SSH server. Thus, you can
+  have a private key on an CSIL Linux machine and log in to another CSIL Linux machines.
+* However, since all CSIL Linux machines share the same home directory, a private key on one CSIL
+  Linux machine is shared with all other CSIL Linux machines as well. Thus, as long as you have your
+  private key on one CSIL Linux machine, you can log in from any CSIL Linux machine to any other
+  CSIL Linux machine. This is because both the private key and the `authorized_keys` file are
+  shared.
+* Since you created a public/private key pair above, you only need to add your public key to the
+  `authorized_keys` file on a CSIL Linux machine. You can use the following command, which appends
+  your public key to the `authorized_keys` file.
+
+  ```bash
+  $ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+  ```
+
+  With this, your private key and your `authorized_keys` file are all shared across all CSIL Linux
+  machines. You can now use any of the CSIL Linux machines as an SSH client and log in to any other
+  CSIL Linux machines as an SSH server.
+* To try out SSH authentication, pick another CSIL Linux CPU server and ssh into it. For example,
+
+  ```bash
+  $ ssh -p csil-cpu8.csil.sfu.ca
+  ```
+
+* If this is your first time logging in to the server, you need to type `yes` to add the server to
+  the known host list.
+* After that, it will ask you to type your *passphrase* instead of your password. The passphrase is
+  the same passphrase that you entered for your private key.
+* Typically, one uses this in conjunction with `ssh-agent` and `ssh-add` to skip your passphrase
+  typing for easy authentication.
+    * [This short article](https://kb.iu.edu/d/aeww) describes the process of using `ssh-agent` and
+      `ssh-add`. In a nutshell, you run `ssh-agent` and then `ssh-add` to keep your private key and
+      the passphrase in memory. `ssh-agent` will run in the background and use your private key and
+      the passphrase to authenticate all SSH logins. When you're done using `ssh` (or `scp`), you
+      need to kill `ssh-agent` so that it removes your private key and the passphrase from memory.
