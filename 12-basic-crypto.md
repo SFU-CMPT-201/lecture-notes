@@ -66,6 +66,8 @@ plain text ----------->  cipher text -----------> plain text
         * Strong collision resistance: it should be difficult to find two messages `x` and `x'`
           where `h(x) == h(x)`. In other words, given a hash function, it should be difficult to
           find two values that produce the same hash.
+    * Ideally, you should get all three properties for a strong cryptographic hash function.
+      However, not all hash functions provide all three properties.
 * Private key crypto (or symmetric key crypto)
 
   ```bash
@@ -267,3 +269,55 @@ on.
       the passphrase in memory. `ssh-agent` will run in the background and use your private key and
       the passphrase to authenticate all SSH logins. When you're done using `ssh` (or `scp`), you
       need to kill `ssh-agent` so that it removes your private key and the passphrase from memory.
+
+## Activity: Collisions in Cryptographic Hash Functions
+
+Above, we discussed the possibility of collisions in cryptographic hash functions as well as "window
+of validity" where a cryptographic hash function is considered secure (i.e., still collision
+resistant and/or still difficult to reverse). A well-known example of a popular cryptographic hash
+function that is no longer considered secure is [MD5](https://en.wikipedia.org/wiki/MD5), which was
+once universal but no longer used in applications that require a secure cryptographic hash function.
+There is a good description of this history on
+[Wikipedia](https://en.wikipedia.org/wiki/MD5#Collision_vulnerabilities).
+
+It used to be the case that MD5 was the most popular choice for secure digest (discussed above), but
+not anymore. For example, if you look at Ubuntu 14.04.6, which is one of the older versions of
+Ubuntu Linux, [its download page](https://releases.ubuntu.com/trusty/) shows all the downloadable
+files as well as the hashes from various algorithms, including MD5, SHA1, and SHA256. Click the link
+and see for yourself. However, if you look at a more recent version, e.g., [Ubuntu 20.04.6's
+download page](https://releases.ubuntu.com/20.04.6/), it only shows a hash for SHA256. Also click
+the link and see for yourself. This is because MD5 is no longer considered secure. (And actually
+SHA1 is no longer considered secure either.)
+
+Let's try a simple example as an activity to examine this further.
+
+The following example comes from [an article on MD5
+collisions](https://natmchugh.blogspot.com/2015/02/create-your-own-md5-collisions.html). It shows
+two images that generate the same MD5 hash. First take a look at the images and see for yourself how
+different they are: the [first image](https://s3-eu-west-1.amazonaws.com/md5collisions/ship.jpg) and
+the [second image](https://s3-eu-west-1.amazonaws.com/md5collisions/plane.jpg).
+
+Then run the following commands to download those images and generate a MD5 hash for each.
+
+```bash
+$ wget https://s3-eu-west-1.amazonaws.com/md5collisions/ship.jpg
+$ wget https://s3-eu-west-1.amazonaws.com/md5collisions/plane.jpg
+$ openssl dgst -md5 ship.jpg
+$ openssl dgst -md5 plane.jpg
+```
+
+The outputs should be identical. What this means is that theoretically, if you used MD5, downloaded
+a file from a website, and verified it, it could still be a file different from the file you
+intended to download.
+
+The command we used (`openssl`) is a popular command for cryptographic functions including hashing,
+encryption, and decryption. `dgst` means that we want to generate a *digest*, which is another term
+commonly used to refer to a hash. Let's use a different algorithm and check the output.
+
+```bash
+$ openssl dgst -sha256 ship.jpg
+$ openssl dgst -sha256 plane.jpg
+```
+
+It should give you two different outputs as we're using a different algorithm, SHA256, not MD5, that
+doesn't create a collision for the given files.
