@@ -255,7 +255,7 @@ on.
 * To try out SSH authentication, pick another CSIL Linux CPU server and ssh into it. For example,
 
   ```bash
-  $ ssh -p 24 csil-cpu08.csil.sfu.ca
+  $ ssh -p 24 csil-cpu07.csil.sfu.ca
   ```
 
 * If this is your first time logging in to the server, you need to type `yes` to add the server to
