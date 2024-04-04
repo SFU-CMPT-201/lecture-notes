@@ -203,7 +203,7 @@ on.
     * Replace `your email address` with an actual email address of yours. For example,
 
       ```bash
-      $ssh-keygen -t ed25519 -C "steveyko@sfu.ca"`
+      $ ssh-keygen -t ed25519 -C "steveyko@sfu.ca"
       ```
 
     * You can use the default file location by pressing `<Enter>`.
@@ -246,7 +246,7 @@ on.
   your public key to the `authorized_keys` file.
 
   ```bash
-  $ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+  $ cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
   ```
 
   With this, your private key and your `authorized_keys` file are all shared across all CSIL Linux
@@ -255,7 +255,7 @@ on.
 * To try out SSH authentication, pick another CSIL Linux CPU server and ssh into it. For example,
 
   ```bash
-  $ ssh -p csil-cpu8.csil.sfu.ca
+  $ ssh -p 24 csil-cpu08.csil.sfu.ca
   ```
 
 * If this is your first time logging in to the server, you need to type `yes` to add the server to
