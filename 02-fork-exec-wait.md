@@ -84,12 +84,22 @@
 
 * Zombie and orphan processes
     * Zombie
-        * The child process terminates but the parent process hasn't called `wait()` yet.
-        * This does not get cleaned up and occupies memory.
-        * This child process is called a zombie process (i.e., the process's dead but not
-          completely).
+        * This is the state where the child process terminates but the parent process hasn't called
+          `wait()` yet.
+        * When it happens, the kernel does not clean up the memory for the child process entirely
+          and keeps certain pieces of information. The reason is that the parent process, at some
+          later point, might want to know the exit status of the child process and call `wait()`.
+        * If the child process is in this state, it is called a zombie process (i.e., the process's
+          dead but not completely).
+        * If the parent creates many child processes and doesn't call `wait()` on them for a long
+          time, there will be many zombie processes occupying memory, which can be problematic. For
+          example, the kernel may not be able to create new processes anymore. Thus, it is important
+          to call `wait()` on child processes in a timely manner.
+        * On Linux, if the parent terminates without calling `wait()` on the child process, it is
+          adopted by `init` and `init` calls `wait()` on the child process.
     * Orphan
-        * The child process is running but the parent process has terminated.
+        * This is the state where the child process is running but the parent process has
+          terminated.
         * This process is called an orphan process as it doesn't have the parent process anymore.
         * On Linux, the child process becomes a child process of `init`.
 
