@@ -64,7 +64,7 @@ plain text ----------->  cipher text -----------> plain text
           h(x)`. In other words, given a value and a hash function, it should be difficult to find
           another value that produces the same hash.
         * Strong collision resistance: it should be difficult to find two messages `x` and `x'`
-          where `h(x) == h(x)`. In other words, given a hash function, it should be difficult to
+          where `h(x) == h(x')`. In other words, given a hash function, it should be difficult to
           find two values that produce the same hash.
     * Ideally, you should get all three properties for a strong cryptographic hash function.
       However, not all hash functions provide all three properties.
