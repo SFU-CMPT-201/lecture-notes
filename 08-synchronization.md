@@ -542,6 +542,7 @@
   #include <pthread.h>
   #include <stdio.h>
   #include <stdlib.h>
+  #include <unistd.h>
 
   static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
   static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
