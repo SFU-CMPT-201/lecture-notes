@@ -824,8 +824,6 @@
 
 ## Producer-Consumer with a Bounded Buffer (aka Circular Buffer)
 
-* For a detailed description, read the section on dining philosophers in OSTEP's [Chapter 31
-  Semaphore](https://pages.cs.wisc.edu/~remzi/OSTEP/threads-sema.pdf).
 * Problem Description
     * Multiple threads share a buffer.
     * Producer threads place items into the buffer.

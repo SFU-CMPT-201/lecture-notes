@@ -106,7 +106,8 @@ plain text ----------->  cipher text -----------> plain text
     * All passwords are hashed and only the hashes are stored. This is for added security. Even if a
       password file gets compromised, plain text passwords are not revealed.
     * When checking a password, check `hash(typed) == stored hash`.
-    * In addition, a *salt* is often used when hashing: `hash(input || salt)`.
+    * In addition, a *salt* is often used when hashing: `hash(input || salt)` (where `||` indicates
+      concatenation).
     * A salt is effectively a random number added to input.
     * It is stored together with the generated hash.
     * This avoids pre-computation of all possible hashes in "rainbow tables" (available for download
