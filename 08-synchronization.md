@@ -732,10 +732,11 @@
       philosopher grab their left fork and then the right fork while having all other philosophers
       grab their right fork and then the left fork. This breaks the hold-and-wait condition since
       there will be at least one philosopher who can't grab any fork.
-    * We can use condition variables.
-        * Grab the left lock. Try the right lock. Wait for the signal. When done eating, signal.
-        * The key point here is that, when waiting (`pthread_cond_wait`), it gives up the left lock.
+    * We can try grabbing both locks at once.
+        * Grab the left lock. Try the right lock. If you can't grab it, give up the left lock, and
+          try again.
         * This prevents the circular-wait condition from occurring.
+        * This does not prevent starvation.
 
       ```c
       #include <pthread.h>
@@ -761,12 +762,13 @@
             pthread_exit((void *)1);
           }
 
-          while (pthread_mutex_trylock(&mtx[right]) != 0) {
-            s = pthread_cond_wait(&cond[right], &mtx[left]);
+          if (pthread_mutex_trylock(&mtx[right]) != 0) {
+            s = pthread_mutex_unlock(&mtx[left]);
             if (s != 0) {
-              perror("pthread_cond_wait");
+              perror("pthread_mutex_unlock");
               pthread_exit((void *)1);
             }
+            continue;
           }
 
           printf("Thread %d: eating\n", (int)arg);
@@ -780,18 +782,6 @@
           s = pthread_mutex_unlock(&mtx[right]);
           if (s != 0) {
             perror("pthread_mutex_unlock");
-            pthread_exit((void *)1);
-          }
-
-          s = pthread_cond_signal(&cond[left]);
-          if (s != 0) {
-            perror("pthread_cond_signal");
-            pthread_exit((void *)1);
-          }
-
-          s = pthread_cond_signal(&cond[right]);
-          if (s != 0) {
-            perror("pthread_cond_signal");
             pthread_exit((void *)1);
           }
         }
