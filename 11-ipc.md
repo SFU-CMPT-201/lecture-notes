@@ -110,7 +110,7 @@
       exit(EXIT_FAILURE);
     }
 
-    if (cpid == 0) {     /* Child reads from pipe and writes to another pipie */
+    if (cpid == 0) {     /* Child reads from pipe and writes to another pipe */
       close(pipefd[1]);  /* Close unused write end */
       close(pipefd2[0]); /* Close unused read end */
 

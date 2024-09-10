@@ -53,7 +53,7 @@
     * An application can use a socket to communicate with another process (local or remote).
     * Returns a file descriptor.
     * You can use this like a file (read/write).
-    * But there are socket-specific calls exist, e.g., send, recv, sendto, recvfrom.
+    * But socket-specific calls exist, e.g., send, recv, sendto, recvfrom.
     * `man socket`
     * We need to understand what these parameters mean first.
 * Domain (`int domain`)

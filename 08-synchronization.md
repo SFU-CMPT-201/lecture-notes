@@ -276,7 +276,7 @@
   depends on the timing of thread execution.
     * *Hold and wait*: threads are already holding resources but also are waiting for additional
       resources being held by other threads.
-    * *Circular wait*: there exists a set {T0, T1, ..., Tn} of threads such that T0 is waiting for
+    * *Circular wait*: there exists a set {T0, T1, ..., Tn-1} of threads such that T0 is waiting for
       a resource that is held by T1, T1 is waiting for T2, ..., Tn–1 is waiting for T0.
     * *Mutual exclusion*: threads hold resources exclusively.
     * *No preemption*: resource released only voluntarily by the thread holding it

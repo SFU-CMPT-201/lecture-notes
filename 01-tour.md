@@ -65,7 +65,7 @@ VM1          VM2
 
 * A VMM is an application running atop a kernel, along with other applications.
 * The VMM creates/runs/manages VMs.
-* This is often used in a desktop environment, e.g., VMWare Player, VirutalBox, QEMU.
+* This is often used in a desktop environment, e.g., VMWare Player, VirtualBox, QEMU.
 
 ### Containerization
 
@@ -144,8 +144,8 @@ Container1          Container2
           the state of data from temporary to permanent. This was originally a database term but now
           used commonly, e.g., `git commit`.
     * Reliability
-        * SSD vs. HD vs. tape: SSD's fastest but least reliable. A tape is slowest but most reliable
-          and lasts longer.
+        * SSD vs. HDD vs. tape: SSD's fastest but least reliable. A tape is slowest but most
+          reliable and lasts longer.
 
 ### CPU Architectures
 
