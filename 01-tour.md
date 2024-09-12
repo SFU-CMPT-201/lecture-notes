@@ -24,70 +24,6 @@
   performance.
 * We need to choose a language that fits the target program's goals.
 
-## How Virtualization Fits in the Traditional OS Stack
-
-There are different types of virtualization.
-
-### VMM (Virtual Machine Monitor) Directly atop Hardware
-
-```bash
-VM1          VM2          VM3
-+--------+   +--------+   +--------+
-| Apps   |   | Apps   |   | Apps   |
-+--------+   +--------+   +--------+
-| Kernel |   | Kernel |   | Kernel |
-+--------+---+--------+---+--------|
-| VMM                              |
-|----------------------------------|
-| Hardware                         |
-+----------------------------------+
-```
-
-* VMM emulates hardware for each VM (Virtual Machine).
-* This is often used in a data center environment.
-
-### VMM atop the Kernel
-
-```bash
-VM1          VM2
-+--------+   +--------+
-| Apps   |   | Apps   |
-+--------+   +--------+
-| Kernel |   | Kernel |
-+--------+---+--------+   +--------+
-| VMM                 |   | Apps   |
-+---------------------+---+--------+
-| Kernel                           |
-|----------------------------------|
-| Hardware                         |
-+----------------------------------+
-```
-
-* A VMM is an application running atop a kernel, along with other applications.
-* The VMM creates/runs/manages VMs.
-* This is often used in a desktop environment, e.g., VMWare Player, VirtualBox, QEMU.
-
-### Containerization
-
-```bash
-Container1          Container2
-+---------------+   +---------------+
-| Apps          |   | Apps          |
-+---------------+---+---------------+   +------+
-| Containerizer                     |   | apps |
-+-----------------------------------+---+------+
-| Kernel                                       |
-|----------------------------------------------|
-| Hardware                                     |
-+----------------------------------------------+
-```
-
-* Containerization creates a *container* not a virtual machine.
-* It does not need to run another kernel.
-* It combines many features that Linux provides for isolation. This includes process isolation
-  (namespaces), resource control/isolation (cgroups), etc.
-* This is the most popular form of virtualization these days, e.g., Docker, Podman.
-
 ## The Hardware Layer
 
 * (Look at [hardware-figures.pptx](hardware-figures.pptx) together for figures.)
@@ -120,17 +56,6 @@ Container1          Container2
     * Nowadays, there are more caches, e.g., L1 cache, L2 cache, and L3 cache. L1 is the smallest
       but closest to the CPU. L3 is the largest but the farthest from the CPU.
 
-### Hardware Threading
-
-* A technique that makes a single core appear as multiple cores (threads).
-
-### NUMA (Non-Uniform Memory Access)
-
-* Look at [hardware-figures.pptx](hardware-figures.pptx).
-* One motherboard that has multiple CPUs (sockets).
-* Memory access time is non-uniform based on where the CPU is and where the memory is (farther away
-  == takes more time to access).
-
 ### Memory Hierarchy
 
 * Registers, cache, mem, SSDs, hard drives, tapes.
@@ -151,24 +76,19 @@ Container1          Container2
 
 * x86 and ARM: two different ISAs (Instruction Set Architectures) that define and use two different
   sets of instructions.
-* CISC vs. RISC debate
-    * CISC (Complex Instruction Set Computer): CISC ISAs were mainly designed for (assembly)
-      programmers and provided many convenient instructions to reduce the effort of (manually)
-      writing (assembly) code.
-    * RISC (Reduced Instruction Set Computer): RISC ISAs were mainly designed for compilers and
-      provided a simplified set of instructions that a CPU can run efficiently.
-    * Modern CPUs often combine CISC and RISC features.
 * 32-bit vs. 64-bit architectures
-    * This is basically determined by the register size but it has cascading effects.
+    * There are many aspects to this, but we only discuss what's relevant to 201.
+    * The most relevant aspect for 201 is that this determines the register size. However, it has
+      cascading effects.
     * With 32-bit, larger-size variable computations (e.g., 64-bit integer additions) need to be
       broken down to multiple operations. With 64-bit, those can be done with a single operation.
     * Register size ---> affects the pointer variable size (32-bit uses 32-bit pointers & 64-bit
       uses 64-bit pointers).
     * Pointer size ---> affects the memory address space size (32-bit space vs. 64-bit space).
     * Pointer size ---> also affects the memory access channel (bus) size.
-        * A 64-bit address requires 64 bits to be transferred from the CPU to memory, while a 32-bit
-          address requires 32 bits to be transferred. I.e., A 64-bit architecture requires more
-          wires to transfer memory addresses.
+        * A 64-bit address needs 64 bits to be transferred from the CPU to memory, while a 32-bit
+          address needs 32 bits to be transferred. A 64-bit architecture typically has more wires (a
+          wider bus) to transfer memory addresses.
 
 ## The Kernel Layer
 
@@ -274,6 +194,70 @@ Container1          Container2
 * There are many implementations but the most popular one is [GNU
   Coreutils](https://www.gnu.org/software/coreutils).
 * Popular commands, such as `ls`, `cp`, etc., are all part of coreutils.
+
+## How Virtualization Fits in the Traditional OS Stack
+
+There are different types of virtualization.
+
+### VMM (Virtual Machine Monitor) Directly atop Hardware
+
+```bash
+VM1          VM2          VM3
++--------+   +--------+   +--------+
+| Apps   |   | Apps   |   | Apps   |
++--------+   +--------+   +--------+
+| Kernel |   | Kernel |   | Kernel |
++--------+---+--------+---+--------|
+| VMM                              |
+|----------------------------------|
+| Hardware                         |
++----------------------------------+
+```
+
+* VMM emulates hardware for each VM (Virtual Machine).
+* This is often used in a data center environment.
+
+### VMM atop the Kernel
+
+```bash
+VM1          VM2
++--------+   +--------+
+| Apps   |   | Apps   |
++--------+   +--------+
+| Kernel |   | Kernel |
++--------+---+--------+   +--------+
+| VMM                 |   | Apps   |
++---------------------+---+--------+
+| Kernel                           |
+|----------------------------------|
+| Hardware                         |
++----------------------------------+
+```
+
+* A VMM is an application running atop a kernel, along with other applications.
+* The VMM creates/runs/manages VMs.
+* This is often used in a desktop environment, e.g., VMWare Player, VirtualBox, QEMU.
+
+### Containerization
+
+```bash
+Container1          Container2
++---------------+   +---------------+
+| Apps          |   | Apps          |
++---------------+---+---------------+   +------+
+| Containerizer                     |   | apps |
++-----------------------------------+---+------+
+| Kernel                                       |
+|----------------------------------------------|
+| Hardware                                     |
++----------------------------------------------+
+```
+
+* Containerization creates a *container* not a virtual machine.
+* It does not need to run another kernel.
+* It combines many features that Linux provides for isolation. This includes process isolation
+  (namespaces), resource control/isolation (cgroups), etc.
+* This is the most popular form of virtualization these days, e.g., Docker, Podman.
 
 ### Activity: Git Exercise
 
