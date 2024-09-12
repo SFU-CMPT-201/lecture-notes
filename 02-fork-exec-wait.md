@@ -2,6 +2,8 @@
 
 ## How to Read a Man Page
 
+* Reading a man page is the main way to learn how to use a system call. However, it takes practice
+  to effectively read a man page.
 * Read the function signature first (and the header files). Carefully examine the return type and
   all parameters. A parameter can be either an input or an output. Find out what it is for each
   parameter.
@@ -11,6 +13,19 @@
   description is relevant to what you try to do.
 * Read the return value section. Check if errors are returned and what they are.
 * Read the error section to find out more about what errors there are.
+
+## Process
+
+* What is a process?
+    * The simplest way to define a process is a *running program*.
+    * However, it is not quite as simple as that, and we'll learn about it more.
+* Program in memory
+    * When you run a program, the OS creates a memory space for the program to run.
+    * You will learn what this memory space contains in a later assignment.
+    * One thing that is relevant to this lecture is the code of the program. It gets loaded to the
+      memory space for the program so that the CPU can easily access the code and run it.
+* Programmers can use system calls to control processes.
+    * Three basic system calls: `fork()`, `exec()`, and `wait()`.
 
 ## Activity: `fork()`
 
@@ -38,8 +53,10 @@
 * An `exec()` function executes a new program. When it is called, the calling process removes the
   currently-running program from memory, loads the new program into memory, and starts executing the
   new program. This means that the calling process is completely replaced with the new program.
+* What this means is that after calling `exec()`, the rest of the program (i.e., its code) won't get
+  executed as it's gone from memory.
 * Write a program that creates a child process. The parent should call any one of `exec` functions
-  that executes `ls -al`. The child should execute `exa -al`.
+  that executes `ls -al`. Finish the program with a line that prints out a string.
 
 ## Activity: `wait()`
 
