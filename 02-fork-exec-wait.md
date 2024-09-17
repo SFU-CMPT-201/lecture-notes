@@ -2,8 +2,15 @@
 
 ## How to Read a Man Page
 
-* Reading a man page is the main way to learn how to use a system call. However, it takes practice
-  to effectively read a man page.
+* Reading a man page is the main way to learn how to use the functions/system calls for systems
+  programming. However, it takes practice to effectively read a man page.
+* The command is `man` followed by the thing that you want to read about, e.g., `man ls`, `man cd`.
+  A lot of times, this will give you the right page.
+* However, sometimes you need to specify a section in order to get the right page. The following
+  three sections are most relevant to 201.
+    * `man 1`: General commands, e.g., `man 1 ls`
+    * `man 2`: System calls, e.g., `man 2 fork`
+    * `man 3`: C standard library functions, e.g., `man 3 printf`
 * Read the function signature first (and the header files). Carefully examine the return type and
   all parameters. A parameter can be either an input or an output. Find out what it is for each
   parameter.
@@ -37,7 +44,8 @@
           created by the kernel at boot time).
     * `a.out` should be a child of the shell (`zsh`).
 * Read the man page for `fork()`.
-* Write a program that calls `fork()` and then keeps calling `sleep()` with some timeout value.
+* Write a program that (just) calls `fork()` and then keeps calling `sleep()` with some timeout
+  value.
     * Run it and check out `btop` in tree mode. There should be a new child process.
     * Kill both processes.
 * Write a program that calls `fork()` and prints out "parent" and the child PID if it is the parent
@@ -45,6 +53,8 @@
   getpid` and `man getppid` to find out how to get the necessary PIDs.
     * The parent and the child need to do different things. Use `if-else` with the return value of
       `fork()` to differentiate the behavior.
+* It is important to know that up to `fork()` there is a single process. After `fork()`, there are
+  two copies of the same program running concurrently.
 
 ## Activity: `exec()`
 
@@ -57,6 +67,7 @@
   executed as it's gone from memory.
 * Write a program that creates a child process. The parent should call any one of `exec` functions
   that executes `ls -al`. Finish the program with a line that prints out a string.
+    * Which process(es) will execute the print-out line? Parent? Child? Both? Neither?
 
 ## Activity: `wait()`
 
