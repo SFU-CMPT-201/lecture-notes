@@ -66,7 +66,8 @@
 * What this means is that after calling `exec()`, the rest of the program (i.e., its code) won't get
   executed as it's gone from memory.
 * Write a program that creates a child process. The parent should call any one of `exec` functions
-  that executes `ls -al`. Finish the program with a line that prints out a string.
+  that executes `ls -a`. The child should call any one of `exec` functions that executes `ls -a -l
+  -h` (which is the same as `ls -alh` but spelled out, which is necessary for `exec` functions).
     * Which process(es) will execute the print-out line? Parent? Child? Both? Neither?
 
 ## Activity: `wait()`
