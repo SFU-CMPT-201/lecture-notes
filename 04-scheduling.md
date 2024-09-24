@@ -225,10 +225,10 @@
           don't run a process from priority 1 queue.
         * If we repeat the above steps, we give more CPU time for priority 0 queue than priority 1
           queue, and also more CPU time for priority 1 queue than priority 2 queue.
-* When we pick a process from each queue, we also use a scheduling algorithm. We do not need to use
-  the same scheduling algorithm for every queue. E.g., priority 0 queue runs the priority scheduling
-  algorithm discussed above, priority 1 queue runs RR, and priority 2 queue runs the FCFS algorithm.
-* This avoids starvation since every process eventually gets a chance to run.
+* When we pick a process from each queue, we also use a scheduling algorithm, e.g., RR for priority
+  0 queue, FCFS for priority 1 queue, etc.
+* This avoids starvation (assuming each queue uses a starvation-free algorithm) since every process
+  eventually gets a chance to run.
 
 ### Multilevel Feedback Queue Scheduling
 
