@@ -74,8 +74,9 @@
     * Suppose 3 processes arrive around the same time but gets added to the ready queue in the order
       of P1, P2, P3.
     * What is the waiting time?
-        * Waiting time is the easiest to calculate, so we'll use it to assess how good an algorithm
-          is.
+        * We'll use it to assess how good an algorithm is. There are other metrics we can use (the
+          scheduling criteria above) but waiting time is easy to calculate, so we'll use it to
+          illustrate how scheduling algorithms work and potential pros and cons.
         * P1 = 0; P2  = 24; P3 = 27
     * What is the average waiting time?
         * (0 + 24 + 27) / 3 = 17
