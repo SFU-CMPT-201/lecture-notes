@@ -29,21 +29,21 @@ This lecture assumes that you know the following already.
 
 * `brk()` and `sbrk()` allow us to increase the heap size by moving the *program break*.
 * `man sbrk`
-    * "the program break is the first location after the end of the uninitialized data segment."
-    * "Increasing the program break has the effect of allocating memory to the process; decreasing
-      the break deallocates memory."
+    * **"the program break is the first location after the end of the uninitialized data segment."**
+    * **"Increasing the program break has the effect of allocating memory to the process; decreasing
+      the break deallocates memory."**
     * Another way to allocate more memory in a process is using `mmap()` which we will discuss in a
       later lecture.
 * Though we can just use `sbrk()` to allocate more memory to our process, the call takes long since
-  it's a system call that crosses the user-kernel boundary. Thus, it's better to get a chunk of
-  memory and manage the chunk piece-by-piece as necessary.
+  it's a system call that crosses the user-kernel boundary, which has overhead. Thus, it's better to
+  get a chunk of memory and manage the chunk piece-by-piece as necessary.
     * `malloc()` calls `sbrk()` to increase the heap size and gives out piece-by-piece as requested
       by a `malloc()` call.
 * Question arises: how do you manage the chunk?
     * Allocation strategies
     * Deallocation strategies
 
-## Memory Allocation
+## Overview
 
 * A memory allocator manages the heap. As a program requests memory allocation, it marks a region
   inside the heap as "allocated" and returns the pointer to the beginning of that region to the
@@ -77,49 +77,48 @@ This lecture assumes that you know the following already.
   ```
 
 * In order to keep track of unused regions (or *blocks*) of the (fragmented) heap, we can use a
-  linked list of free blocks. We will later discuss this further.
-* For the sake of our discussion, let's assume that we have a linked list of free blocks.
-* Allocating memory (e.g., serving a `malloc()` call) requires us to find a big enough memory block
-  that can satisfy the request.
-* There are three strategies we can consider.
-    * First-fit
-        * We traverse the linked list of free blocks, and allocates the first block that can fit the
-          requested size.
-        * We keep the remaining free space free for later requests. I.e., we *split* a free block
-          into two blocks, one to allocate and the other to keep as free.
-        * An advantage of this is its implementation simplicity. Also, it is fast as it only needs
-          to find the first big enough block.
-        * A disadvantage is that sometimes it pollutes the beginning of the free list with small
-          objects, leading to more search time for bigger allocation requests.
-    * Best-fit
-        * We traverse the linked list and allocate the smallest free block that is big enough.
-        * We keep the remaining free space free for later requests.
-        * An advantage of this is that it reduces wasted memory space.
-        * A disadvantage is that it must search the entire list (unless ordered by size which has
-          additional implementation complexity).
-        * Another disadvantage is that it may create many small free blocks, leading to more chances
-          of *external fragmentation* (explained below).
-    * Worst-fit
-        * We traverse the linked list and allocate the largest free block.
-        * An advantage is that it produces large leftover free blocks.
-        * A disadvantage is that it must search the entire list.
-* External fragmentation
-    * We might run into a scenario where we have left with many small blocks that can't satisfy a
-      large allocation request, *even if the total sum of all free blocks exceed the size of the
-      large allocation*. This is called external fragmentation.
-    * There's a similar problem called *internal* fragmentation. We will discuss it in [Virtual
-      Memory](06-virtual-memory.md)
+  linked list of free blocks.
+    * Note that we only keep track of free blocks. This is because `malloc()` does not need to know
+      about allocated blocks, and `free()` receives the block to deallocate as its parameter. (This
+      will be more clear after we look at the details later.)
+* We will look at this in detail below, but briefly, it works as follows.
+    * We start with a large chunk of memory, and we mark the entire chunk as a free block. The head
+      pointer of the linked list points to the free block.
+    * For the rest of the steps below, assume that we somehow have a linked list of multiple free
+      blocks. It will become clear later how we can have multiple free blocks.
+    * `malloc()` works generally as follows.
+        * We first pick a large enough free block from the linked list. There are many ways to find
+          such a block and we will discuss a few algorithms later. For now, let's just assume that
+          we have a way to pick a large enough free block.
+        * We remove the chosen free block from the linked list.
+        * We *split* the free block into two blocks---one block with the requested size, and the
+          other block with the rest.
+        * We return the pointer to the first block to the requester, i.e., the first block's address
+          is the return value of `malloc()`. The block is now allocated.
+        * We insert the new free block back into the *head* of the linked list, i.e., we make the
+          new free block as the first block in the linked list.
+    * `free()` works generally as follows.
+        * We insert the block that's being freed into the *head* of the linked list. This is the
+          same as what `malloc()` does with a new free block. We always insert a new free block into
+          the head of the linked list.
+    * The reason why we can have multiple free blocks is because a program can call `malloc()` and
+      `free()` any time as it runs. When `malloc()` is called, it splits a free block into an
+      allocated block and a new free block. When `free()` is called, it inserts an allocated block
+      back into the linked list. Thus, as `malloc()` and `free()` are called throughout the program,
+      blocks are allocated and inserted back into the linked list, creating multiple free blocks.
 
-## Memory Deallocation
+## Linked List Management
 
-* Once a program is done with a memory block, it frees the memory block, i.e., it returns the memory
-  block to the memory allocator. The memory allocator then makes this block available again to
-  satisfy future allocation requests.
-* `free()` implementation
-    * We can use a linked list of free blocks.
-    * The head points to the most recently freed memory.
-    * We use a header for each free block to keep track of the size of the free block and a pointer
-      to the next free block.
+* Let's look at the linked list management in more detail.
+* Basics
+    * We have a linked list of free blocks.
+    * The head points to the most recent free block.
+    * We use a *header* for each free block to keep track of the size of the free block and a
+      pointer to the next free block.
+    * For `malloc()`, we *split* a free block.
+    * For `free()`, we insert the block being freed back into the linked list.
+    * We also perform *coalescing*, that combines multiple, consecutive free blocks into a larger
+      single free block.
 * Below is an example with the heap size of 256 bytes. Let's assume that `size` and `next` are 8
   bytes each.
 
@@ -280,6 +279,12 @@ This lecture assumes that you know the following already.
 
 * Avoiding external fragmentation using *coalescing*: if there are consecutive free blocks, we
   combine them into a larger block. This makes room for larger allocation requests.
+    * External fragmentation
+        * We might run into a scenario where we have left with many small blocks that can't satisfy
+          a large allocation request, *even if the total sum of all free blocks exceed the size of
+          the large allocation*. This is called external fragmentation.
+        * There's a similar problem called *internal* fragmentation. We will discuss it in [Virtual
+          Memory](06-virtual-memory.md)
 
   ```bash
   After coalescing:
@@ -311,3 +316,30 @@ This lecture assumes that you know the following already.
   head --> |size = 256  | 0
            +------------+
   ```
+
+## Finding a Free Block
+
+* Allocating memory (e.g., serving a `malloc()` call) requires us to find a big enough memory block
+  that can satisfy the request.
+* There are three strategies we can consider.
+    * First-fit
+        * We traverse the linked list of free blocks, and allocates the first block that can fit the
+          requested size.
+        * We keep the remaining free space free for later requests. I.e., we *split* a free block
+          into two blocks, one to allocate and the other to keep as free.
+        * An advantage of this is its implementation simplicity. Also, it is fast as it only needs
+          to find the first big enough block.
+        * A disadvantage is that sometimes it pollutes the beginning of the free list with small
+          objects, leading to more search time for bigger allocation requests.
+    * Best-fit
+        * We traverse the linked list and allocate the smallest free block that is big enough.
+        * We keep the remaining free space free for later requests.
+        * An advantage of this is that it reduces wasted memory space.
+        * A disadvantage is that it must search the entire list (unless ordered by size which has
+          additional implementation complexity).
+        * Another disadvantage is that it may create many small free blocks, leading to more chances
+          of external fragmentation explained earlier.
+    * Worst-fit
+        * We traverse the linked list and allocate the largest free block.
+        * An advantage is that it produces large leftover free blocks.
+        * A disadvantage is that it must search the entire list.
