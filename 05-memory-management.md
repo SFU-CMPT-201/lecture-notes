@@ -85,7 +85,8 @@ This lecture assumes that you know the following already.
     * First-fit
         * We traverse the linked list of free blocks, and allocates the first block that can fit the
           requested size.
-        * We keep the remaining free space free for later requests.
+        * We keep the remaining free space free for later requests. I.e., we *split* a free block
+          into two blocks, one to allocate and the other to keep as free.
         * An advantage of this is its implementation simplicity. Also, it is fast as it only needs
           to find the first big enough block.
         * A disadvantage is that sometimes it pollutes the beginning of the free list with small
@@ -104,8 +105,8 @@ This lecture assumes that you know the following already.
         * A disadvantage is that it must search the entire list.
 * External fragmentation
     * We might run into a scenario where we have left with many small blocks that can't satisfy a
-      large allocation request, even if the total sum of all free blocks exceed the size of the
-      large allocation. This is called external fragmentation.
+      large allocation request, *even if the total sum of all free blocks exceed the size of the
+      large allocation*. This is called external fragmentation.
     * There's a similar problem called *internal* fragmentation. We will discuss it in [Virtual
       Memory](06-virtual-memory.md)
 
@@ -148,8 +149,8 @@ This lecture assumes that you know the following already.
            |            | 16
            |------------|
            |(Header)    | 15
-           |size = 256  |    (size = total_free)
-  head --> |next = null | 0
+           |next = null |
+  head --> |size = 256  | 0 (size = free + header)
            +------------+
   ```
 
@@ -171,16 +172,16 @@ This lecture assumes that you know the following already.
            |            |
            |------------|
            |(Header)    | 131
-           |size = 140  |    (size = 256 - 116 = 140)
-  head --> |next = null | 116
+           |next = null |
+  head --> |size = 140  | 116 (size = 256 - 116 = 140)
            |------------|
            |            | 115
            | Allocated  |
            |            | 16
            |------------|
            |(Header)    | 15
-           |size = 116  |
-           |next = null | 0
+           |next = null |
+           |size = 116  | 0
            +------------+
   ```
 
@@ -194,24 +195,24 @@ This lecture assumes that you know the following already.
            |            | 198
            |------------|
            |(Header)    | 197
-           |size = 74   |    (size = 256 - 182)
-  head --> |next = null | 182
+           |next = null |
+  head --> |size = 74   | 182 (size = 256 - 182)
            |------------|
            |            | 181
            | Allocated  |
            |            | 132
            |------------|
            |(Header)    | 131
-           |size = 66   |
-           |next = null | 116
+           |next = null |
+           |size = 66   | 116
            |------------|
            |            | 115
            | Allocated  |
            |            | 16
            |------------|
            |(Header)    | 15
-           |size = 116  |
-           |next = null | 0
+           |next = null |
+           |size = 116  | 0
            +------------+
   ```
 
@@ -225,24 +226,24 @@ This lecture assumes that you know the following already.
            |            | 198
            |------------|
            |(Header)    | 197
-           |size = 74   |
-           |next = null | 182
+           |next = null |
+           |size = 74   | 182
            |------------|
            |            | 181
            | Allocated  |
            |            | 132
            |------------|
            |(Header)    | 131
-           |size = 66   |
-           |next = null | 116
+           |next = null |
+           |size = 66   | 116
            |------------|
            |            | 115
            | Free       |
            |            | 16
            |------------|
            |(Header)    | 15
-           |size = 116  |
-  head --> |next = 182  | 0 (next points to the previous head at 182)
+           |next = 182  |    (next points to the previous head at 182)
+  head --> |size = 116  | 0
            +------------+
   ```
 
@@ -256,24 +257,24 @@ This lecture assumes that you know the following already.
            |            | 198
            |------------|
            |(Header)    | 197
-           |size = 74   |
-           |next = null | 182
+           |next = null |
+           |size = 74   | 182
            |------------|
            |            | 181
            | Free       |
            |            | 132
            |------------|
            |(Header)    | 131
-           |size = 66   |
-  head --> |next = 0    | 116  (next points to the previous head at 0)
+           |next = 0    |     (next points to the previous head at 0)
+  head --> |size = 66   | 116
            |------------|
            |            | 115
            | Free       |
            |            | 16
            |------------|
            |(Header)    | 15
-           |size = 116  |
-           |next = 182  | 0
+           |next = 182  |
+           |size = 116  | 0
            +------------+
   ```
 
@@ -306,7 +307,7 @@ This lecture assumes that you know the following already.
            |            | 16
            |------------|
            |(Header)    | 15
-           |size = 256  |
-  head --> |next = null | 0
+           |next = null |
+  head --> |size = 256  | 0
            +------------+
   ```
