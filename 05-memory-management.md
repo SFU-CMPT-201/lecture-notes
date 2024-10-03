@@ -45,9 +45,8 @@ This lecture assumes that you know the following already.
 
 ## Overview
 
-* A memory allocator manages the heap. As a program requests memory allocation, it marks a region
-  inside the heap as "allocated" and returns the pointer to the beginning of that region to the
-  program.
+* A memory allocator manages the heap. As a program requests memory allocation, it returns a pointer
+  to an unused (or *free*) region inside the heap.
 * In order to do that, the memory allocator needs to keep track of which part of the heap is not
   used.
 * During execution, a program requests heap allocation and frees allocated regions. Thus, the heap
@@ -89,7 +88,7 @@ This lecture assumes that you know the following already.
     * `malloc()` works generally as follows.
         * We first pick a large enough free block from the linked list. There are many ways to find
           such a block and we will discuss a few algorithms later. For now, let's just assume that
-          we have a way to pick a large enough free block.
+          we have a way to pick a large enough free block from the linked list.
         * We remove the chosen free block from the linked list.
         * We *split* the free block into two blocks---one block with the requested size, and the
           other block with the rest.
@@ -112,11 +111,18 @@ This lecture assumes that you know the following already.
 * Let's look at the linked list management in more detail.
 * Basics
     * We have a linked list of free blocks.
-    * The head points to the most recent free block.
+    * The head always points to *the most recent* free block.
+    * The general algorithm for `malloc()` is what is described above.
+        * Pick a free block from the linked list.
+        * Remove it from the linked list.
+        * Split the free block into two blocks, allocated and free.
+        * Insert the new free block back into the *head* of the linked list.
+        * Return the allocated block to the caller.
+    * The general algorithm for `free()` is just inserting the given block into the head of the
+      linked list, as described above.
+* Details
     * We use a *header* for each free block to keep track of the size of the free block and a
       pointer to the next free block.
-    * For `malloc()`, we *split* a free block.
-    * For `free()`, we insert the block being freed back into the linked list.
     * We also perform *coalescing*, that combines multiple, consecutive free blocks into a larger
       single free block.
 * Below is an example with the heap size of 256 bytes. Let's assume that `size` and `next` are 8
@@ -277,7 +283,7 @@ This lecture assumes that you know the following already.
            +------------+
   ```
 
-* Avoiding external fragmentation using *coalescing*: if there are consecutive free blocks, we
+* Avoiding *external fragmentation* using *coalescing*: if there are consecutive free blocks, we
   combine them into a larger block. This makes room for larger allocation requests.
     * External fragmentation
         * We might run into a scenario where we have left with many small blocks that can't satisfy
