@@ -70,6 +70,8 @@
 
 ## Solution: Virtual Memory
 
+* "All problems in computer science can be solved by another level of indirection, except for the
+  problem of too many levels of indirection." -- David Wheeler
 * Virtual memory is a mechanism to enable (i) physical memory sharing for multiple processes,
   and (ii) isolation of each process's memory access
 * Simply put, a process uses *virtual* memory instead of physical memory.
