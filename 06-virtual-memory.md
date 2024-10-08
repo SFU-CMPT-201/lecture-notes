@@ -259,7 +259,7 @@
       and hardware jointly performs address translation.
 * Page table size:
     * If page numbers use *n* bits, the maximum possible number of pages is *2^n*.
-    * If offsets use *m* bits, the maximum possible page size is *2^m - 1*.
+    * If offsets use *m* bits, the maximum possible page size is *2^m*.
     * For example, suppose the page size is 4 KB (i.e., *m* is 12) and we use a 32-bit architecture.
       *n* is then 20 (32 - 12), which means that we can have *2^20* pages. This is 1M pages and the
       page table should be able to handle this many pages. There are many solutions that exist to
@@ -372,7 +372,7 @@
     * Suppose memory page access occurs like this (by page number): 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4,
       5
     * The page frames will be used like the following according to the optimal page replacement
-      algorithm. * indicates a page replacement.
+      algorithm. `*` indicates a page replacement.
 
       ```bash
                                                        *             *
