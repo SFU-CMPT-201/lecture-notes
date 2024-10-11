@@ -96,9 +96,9 @@
       }
 
       if (WIFEXITED(wstatus)) {
-        printf("Child done.\n");
+          printf("Child done with exit status: %d\n", WEXITSTATUS(wstatus));
       } else {
-        printf("%d\n", WEXITSTATUS(wstatus));
+          printf("Child did not exit normally.\n");
       }
     } else {
       if (execl("/usr/bin/exa", "-a", "-l", NULL) == -1) {
