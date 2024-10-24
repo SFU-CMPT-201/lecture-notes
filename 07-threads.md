@@ -76,7 +76,7 @@
     * `pthread_create()`
         * `man pthread_create`
         * `pthread_t`: this is the type used for thread IDs.
-        * `pthread_create()` expects a function pointer to a thread function (that will run inside a
+        * `pthread_create()` expects a function pointer to a thread function (that will run as a
           thread).
         * It also expects `void *arg`, which gets passed to the thread function as an argument when
           the thread starts. Since this is `void *`, you can cast any pointer. If you want to pass
@@ -85,8 +85,9 @@
     * `pthread_exit()` terminates the calling thread. Performing a return from the thread function
       implicitly called `pthread_exit()` with its return value.
     * `pthread_self()` returns the caller's id.
-    * `pthread_join()` waits until the thread identified by the parameter terminates.
-    * `pthread_detach()` lets the calling thread just run. We can use this when we don't need to
+    * `pthread_join()` waits until the thread identified by the parameter terminates. You can get
+      the return value from the thread with `void **retval`.
+    * `pthread_detach()` lets the calling thread just run. You can use this when you don't need to
       return anything.
 
 ### Pthread Activity

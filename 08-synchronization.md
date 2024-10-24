@@ -16,12 +16,13 @@
 
 ## Locks (Mutexes)
 
-* Consider the data race example discussed previously. Updating `cnt` is not a single operation but
-  consists of multiple sub-operations, e.g., reading from memory, adding `1` to `cnt`, and writing
-  it back to memory. Thus, if you have multiple threads updating `cnt` concurrently, these
-  sub-operations run concurrently as well, which means that the sub-operations from different
-  threads interleave and mix up with each other during their execution. This mix-up of
-  sub-operations is the main source of unexpected/inaccurate results as discussed previously.
+* Consider the data race example discussed previously. Updating `cnt` may appear to be a single
+  operation but in reality, it consists of multiple sub-operations, e.g., reading from memory,
+  adding `1` to `cnt`, and writing it back to memory. Thus, if you have multiple threads updating
+  `cnt` concurrently, these sub-operations run concurrently as well, which means that the
+  sub-operations from different threads interleave and mix up with each other during their
+  execution. This mix-up of sub-operations is the main source of unexpected/inaccurate results as
+  discussed previously.
 * To avoid this, we need to be able to prevent this mix-up of sub-operations from different threads.
 * A lock or a mutex (for *mut*ual *ex*clusion) is a primitive that gives us this ability.
 * Generally, a lock mechanism consists of the following three things.
@@ -172,7 +173,7 @@
       the other two threads share another global variable `b`. We can use two locks, one for `a` and
       another for `b`, to control access. If we use only a single lock, four threads will compete
       for the same lock even if they do not all access the same variable.
-    * Reducing `lock contention` is important for performance.
+    * Reducing *lock contention* is important for performance.
 * `pthread_mutex_trylock()` and `pthread_mutex_timedlock()`
     * These functions allows us to control the blocking behavior of `pthread_mutex_lock()`.
     * `pthread_mutex_trylock()`: from the man page, "The `pthread_mutex_trylock()` function shall be
@@ -201,10 +202,16 @@
     * A *thread safe* function is a function that multiple threads can run safely.
     * A thread safe function either does not access shared resources or provides proper protection
       for its critical sections that access shared resources.
-    * Reentrant vs nonreentrant functions
-        * A reentrant function is a function that produces the correct output even when it is
-          called again while executing (via different threads, signal handlers, etc.).
-        * Reentrant functions don't use any shared (global or static) variables, thus thread safe.
+    * A related concept: Reentrant vs nonreentrant functions
+        * A reentrant function is a function that produces the correct output even when it is called
+          again while executing (via different threads, signal handlers, etc.).
+        * Reentrant functions really need to be understood in the context of signal handlers. Signal
+          handlers can run on the same thread. I.e., if a function is called by the main function,
+          but then also called by a signal handler they run on the same thread. Wikipedia has a good
+          example, where you can't simply use a lock to make it work. Wikipedia as [a good
+          example](https://en.wikipedia.org/wiki/Reentrancy_(computing)#Neither_reentrant_nor_thread-safe).
+          In the example, you can't simply use a lock to make it reentrant, since it's going to
+          cause a problem called *deadlock* that we'll discuss below.
         * A common technique to implement a reentrant function: any info returned to the caller or
           maintained across function calls should use caller-allocated buffers. E.g., when calling
           `write()`, we need to allocate a buffer and pass it to the function. This is a common
@@ -670,9 +677,14 @@
 
 * This is another synchronization primitive.
 * You can think of a semaphore as a lock with a count.
-    * A semaphore allows multiple threads to grab the same lock.
-    * You first need to initialize the semaphore with the max number of threads that you want to
-      allow to grab the lock.
+    * A lock is either available or not available, i.e., binary.
+    * A semaphore is more flexible and indicates the availability as a count, i.e., *how many* are
+      available.
+    * This is useful in scenarios where availability is not binary but a count, e.g., if you have
+      available slots. We will look at an example later.
+    * If the availability count is 0, it means the semaphore is unavailable.
+    * If the availability count is greater than 0, it means the semaphore is available.
+    * You first need to initialize the semaphore with the max availability count.
 * In pthread, there are three functions to note.
     * `sem_init(sem_t *sem, int pshared, unsigned int value)`: the function that initializes the
       count to `value` for `sem`. This allows up to `value` number of threads to grab `sem`.
