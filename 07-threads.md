@@ -106,10 +106,19 @@
   and initialize it to 0. Two new threads should each run a loop 10,000,000 times that keeps
   incrementing `cnt`. The main thread should wait on both threads, and when everything's done,
   should print out the value of `cnt`. Run it multiple times and see the outputs.
-    * The outputs should be *non-deterministic*, meaning the behavior should be different every time
-      the program runs.
-    * This is as oppose to *deterministic* behavior where a program behaves the same way every time
-      it runs.
+    * The outputs should be *non-deterministic*, meaning the outputs are different every time the
+      program runs.
+    * This is as oppose to *deterministic* outputs where a program outputs the same result every
+      time it runs.
+    * There is a difference between non-deterministic *behavior* and non-deterministic *output*.
+      Non-deterministic behavior means that your program's *execution* is different every time it
+      runs. Non-deterministic output means that your program produces different *outputs* every time
+      it runs. However, non-deterministic behavior doesn't always lead to non-deterministic output.
+      More often than not, we expect non-deterministic behavior to produce deterministic output. For
+      example, if your program calculate a formula, no matter how many threads you use
+      (non-deterministic behavior), you expect to get the correct result every time (deterministic
+      output).
+    * Sometimes, we expect the program to produce non-deterministic output, e.g., a random function.
     * The execution of a concurrent program is typically non-deterministic.
 * This problem is known as the *data race problem*.
     * If you run multiple threads on different cores, they run at the same time.
