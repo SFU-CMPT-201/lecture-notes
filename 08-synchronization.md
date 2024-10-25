@@ -312,10 +312,10 @@
         pthread_mutex_lock(&mutex0);
         printf("thread0: mutex0\n");
         pthread_mutex_lock(&mutex1);
+        pthread_mutex_unlock(&another_lock);
         printf("thread0: mutex1\n");
         pthread_mutex_unlock(&mutex0);
         pthread_mutex_unlock(&mutex1);
-        pthread_mutex_unlock(&another_lock);
         pthread_exit(0);
       }
 
@@ -324,10 +324,10 @@
         pthread_mutex_lock(&mutex1);
         printf("thread1: mutex1\n");
         pthread_mutex_lock(&mutex0);
+        pthread_mutex_unlock(&another_lock);
         printf("thread1: mutex0\n");
         pthread_mutex_unlock(&mutex1);
         pthread_mutex_unlock(&mutex0);
-        pthread_mutex_unlock(&another_lock);
         pthread_exit(0);
       }
 
