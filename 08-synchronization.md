@@ -722,8 +722,7 @@
     * This means that each fork is shared by two philosophers sitting next to each other.
 * We can model this problem as a synchronization problem.
     * Each thread is a philosopher.
-    * A fork is a shared resource, and needs access control. I.e., coordination is needed to grab
-      forks.
+    * A fork is a shared resource that only one should access.
 * Activity: come up with a solution that protects shared resources correctly and does not deadlock.
     * One big lock (not efficient): we can use one mutex to guard all forks and control access. This
       avoids deadlocks but allows only one philosopher to eat. No other philosophers can eat if one
@@ -759,7 +758,7 @@
 
       #define NUMBER 5
 
-      static pthread_mutex_t mtx[NUMBER];
+      static pthread_mutex_t mtx[NUMBER] = {PTHREAD_MUTEX_INITIALIZER};
 
       static void *thread_func(void *arg) {
         int left = (int)arg;
