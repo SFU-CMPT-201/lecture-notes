@@ -687,8 +687,8 @@
     * You first need to initialize the semaphore with the max availability count.
 * In pthread, there are three functions to note.
     * `sem_init(sem_t *sem, int pshared, unsigned int value)`: the function that initializes the
-      count to `value` for `sem`. This allows up to `value` number of threads to grab `sem`.
-      `pshared` indicates if `sem` is for threads (`0`) or processes (`1`).
+      count to `value` for `sem`. `value` is the availability count. `pshared` indicates if `sem` is
+      for threads (`0`) or processes (`1`).
     * `sem_wait(sem_t *sem)`: the function that grabs `sem`. Internally, if the count is 0, it
       blocks (i.e., does not return) until the count becomes greater than 0. If the count is (or
       becomes) greater than 0, it decrements the count by one and returns.
@@ -717,7 +717,8 @@
     * Philosophers sit at a round table.
     * Philosophers alternate between eating and thinking.
     * In between any two philosophers sitting next to each other, there is a fork.
-    * To eat, a philosopher needs two forks (at her left and right). To think, no forks are needed.
+    * To eat, a philosopher needs two forks (at their left and right). To think, no forks are
+      needed.
     * This means that each fork is shared by two philosophers sitting next to each other.
 * We can model this problem as a synchronization problem.
     * Each thread is a philosopher.
@@ -759,7 +760,6 @@
       #define NUMBER 5
 
       static pthread_mutex_t mtx[NUMBER];
-      static pthread_cond_t cond[NUMBER];
 
       static void *thread_func(void *arg) {
         int left = (int)arg;
@@ -866,7 +866,7 @@
       static void *thread_func(void *arg) {
         int s;
         for (;;) {
-          sleep(5);
+          sleep(1);
           if (sem_wait(&filled_cnt) == -1) {
             perror("sem_wait");
             pthread_exit((void *)1);

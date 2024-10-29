@@ -63,8 +63,8 @@ There are five basic system calls for file I/O.
     * We can use `lseek` to manually adjust the file offset.
     * `off_t lseek(int fd, off_t offset, int whence);`
     * The last parameter `whence` indicates from which location we want to adjust the file offset.
-      There are three possibilities (`SEEK_SET`, `SEEK_CUR`, and `SEEK_END`) and they are
-      illustrated below.
+      `offset` is always added. There are three possibilities (`SEEK_SET`, `SEEK_CUR`, and
+      `SEEK_END`) and they are illustrated below.
 
   ```bash
   Suppose a file has N bytes (i.e., EOF is N-1) and the current file offset is C.
