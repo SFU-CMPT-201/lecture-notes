@@ -681,7 +681,7 @@
     * A semaphore is more flexible and indicates the availability as a count, i.e., *how many* are
       available.
     * This is useful in scenarios where availability is not binary but a count, e.g., if you have
-      available slots. We will look at an example later.
+      available entries. We will look at an example later.
     * If the availability count is 0, it means the semaphore is unavailable.
     * If the availability count is greater than 0, it means the semaphore is available.
     * You first need to initialize the semaphore with the max availability count.
