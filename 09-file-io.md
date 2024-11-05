@@ -15,8 +15,9 @@ There are five basic system calls for file I/O.
         * From `man open`, "The argument flags must include one of the following access modes:
           `O_RDONLY`, `O_WRONLY`, or `O_RDWR`. These request opening the file read-only, write-only,
           or read/write, respectively. In addition, zero or more file creation flags and file status
-          flags can be bitwise-or'd in flags. The file creation flags are `O_CLOEXEC`, `O_CREAT`,
-          `O_DIRECTORY`, `O_EXCL`, `O_NOCTTY`, `O_NOFOLLOW`, `O_TMPFILE`, and `O_TRUNC`."
+          flags can be bitwise-or'd (`|`) in flags. The file creation flags are `O_CLOEXEC`,
+          `O_CREAT`, `O_DIRECTORY`, `O_EXCL`, `O_NOCTTY`, `O_NOFOLLOW`, `O_TMPFILE`, and `O_TRUNC`."
+        * Bitwise-or sets individual bits in a bit vector, e.g., `O_RDWR | O_CREAT`.
     * The 3rd parameter
         * If creation is specified (either `O_CREAT` or `O_TMPFILE`), this specifies the file
           permissions.
