@@ -394,7 +394,8 @@ close                   close
     * loopback address: 127.0.0.1
         * The constant to use for `sin_addr.s_addr` is `INADDR_LOOPBACK`.
         * This is for local communication, similar to the UNIX domain sockets.
-        * If we use this address, data sent/received are all local, i.e., nothing goes out the network
+        * If we use this address, data sent/received are all local, i.e., nothing goes out the
+          network.
     * Wildcard address
         * The constant to use for `sin_addr.s_addr` is `INADDR_ANY`.
         * A machine can have multiple network cards, e.g., a typical laptop has a wireless card and
