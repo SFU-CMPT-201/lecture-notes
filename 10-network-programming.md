@@ -728,8 +728,5 @@ close                   close
         }
       }
     }
-
-    if (close(cfd) == -1)
-      handle_error("close");
   }
   ```
