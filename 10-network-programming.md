@@ -421,12 +421,12 @@ close                   close
 
 ## Network Byte Order
 
-* Since different architectures use different byte orders, i.e., little endian and big endian,
-  we need to make sure that the data sent over the network uses the same byte order.
-    * Little endian: little end goes first ("little end"---the least significant byte; "first"---the
+* Since different architectures use different byte orders, i.e., little endian and big endian, we
+  need to make sure that the data sent over the network uses the same byte order.
+    * Little endian: the little end goes first ("little end"---the least significant byte;
+      "first"---the lowest address).
+    * Big endian: the big end goes first ("big end"---the most significant byte; "first"---the
       lowest address).
-    * Big endian: big end goes first ("big end"---the most significant byte; "first"---the lowest
-      address).
 * This is called the network byte order, and it is big endian.
 * For example, the port number and the IP address need to be recognizable by any machine on the
   network, so they need to use the network byte order.

@@ -19,7 +19,8 @@
     * `filedes[1]` gives us the write end.
 * A pipe has the following characteristics.
     * It uses a buffer in the kernel.
-    * It is unidirectional.
+    * It is unidirectional, meaning that once you determine who's the sender and who's the receiver,
+      you can't switch that.
     * It is a byte stream.
 * Since a pipe returns file descriptors, we can use regular file I/O functions from `stdio`.
     * We can use both non-buffered I/O (e.g., `read()`, `write()`) and buffered I/O (e.g.,
