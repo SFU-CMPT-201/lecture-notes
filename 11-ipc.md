@@ -204,8 +204,8 @@ This is a slight detour for IPC but we will see the reason soon.
         * In this case, each process will have a private copy.
 * Thus, memory mapping has four cases.
     * Private file mapping: a file is mapped to a process as a private mapping. In other words, if
-      multiple processes map the same file, they each will have a private copy. In other words, if
-      they write to its mapping, it *won't* be written to the actual file.
+      multiple processes map the same file, they each will have a private copy. If they write to its
+      mapping, it *won't* be written to the actual file.
     * Private anonymous mapping: more memory gets allocated to the calling process. `fork()` copies
       the memory but each process has a private copy. In other words, changes to the mapped memory
       are not propagated to the child (or vice versa).
@@ -281,8 +281,8 @@ This is a slight detour for IPC but we will see the reason soon.
 ## Shared Memory
 
 * Shared memory allows sharing across *unrelated* processes.
-    * `mmap` with `MAP_SHARED | MAP_ANONYMOUS` allows memory sharing for *related* processes via
-      `fork()`.
+    * `mmap` with `MAP_SHARED | MAP_ANONYMOUS` (i.e., shared anonymous) allows memory sharing for
+      *related* processes via `fork()`.
 * `man 7 shm_overview` provides an overview.
     * We can first open a shared memory object (using `shm_open()` as below), truncate the size
       (using `ftruncate()` as below), and create a memory mapping with the shared memory object
@@ -303,8 +303,8 @@ This is a slight detour for IPC but we will see the reason soon.
       size.
     * Refer to `man ftruncate`.
 * `void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)`
-    * Once we create a shared memory object and adjust the size, we need to create a memory
-      mapping for it.
+    * Once we create a shared memory object and adjust the size, we need to create a memory mapping
+      for it.
     * We need to give the shared memory object file descriptor as `fd`.
 * `int munmap(void *addr, size_t length)`
     * When we no longer need to access the shared memory, we can unmap it.

@@ -587,6 +587,7 @@ close                   close
   after accepting a connection.
     * Each new process/thread interacts with a client with a new socket.
     * This has the overhead of creating new processes or threads.
+    * This is probably good for a beginner or as the first-cut implementation.
 * Another possibility: non-blocking socket
     * Non-blocking `accept()` will either accept a new connection or return immediately if there's
       no incoming connection.
