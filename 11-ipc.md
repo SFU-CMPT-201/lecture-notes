@@ -146,7 +146,7 @@
     * `man 3 mkfifo` has the details.
     * `int mkfifo(const char *pathname, mode_t mode)`
     * `pathname` is the name of the FIFO to be created.
-    * `mode` is the same as `open()`.
+    * `mode` is the permission, same as `open()`.
     * This is similar to UNIX domain sockets as it creates a file.
     * Use `unlink()` to remove a FIFO, just like a file.
 * As long as a process knows `pathname`, it can access a FIFO. Thus, unrelated processes (assuming
@@ -161,7 +161,7 @@
 
 ## POSIX Message Queues
 
-* A message queue is similar to a FIFO, but it is typically used to send a structured data (a
+* A message queue is similar to a FIFO, but it is typically used to send structured data (a
   *message*), e.g., `struct` or `union`, rather than a byte stream.
     * `man 7 mq_overview` details this.
 * There are 5 important functions.
@@ -208,12 +208,14 @@ This is a slight detour for IPC but we will see the reason soon.
       mapping, it *won't* be written to the actual file.
     * Private anonymous mapping: more memory gets allocated to the calling process. `fork()` copies
       the memory but each process has a private copy. In other words, changes to the mapped memory
-      are not propagated to the child (or vice versa).
+      are not propagated to the child (or vice versa). `fd` should be `-1` (no files involved) with
+      `offset` set to `0`.
     * Shared file mapping: a file is mapped to a process as a shared mapping. In other words, if
       multiple processes map the same file, changes will be propagated to all the processes and the
       actual file will be written.
     * Shared anonymous mapping: more memory gets allocated to the calling process. Moreover, memory
-      is shared and changes are propagated. (More on this in [Shared Memory](#shared-memory).)
+      is shared and changes are propagated. `fd` should be `-1` (no files involved) with `offset`
+      set to `0` unless it uses [`shm_open()`](#shared-memory).
 * `int munmap(void *addr, size_t length);`
     * Unmaps the mapped memory.
 * Activity: memory-mapped file I/O.
