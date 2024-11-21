@@ -25,7 +25,7 @@
 plain text ----------->  cipher text -----------> plain text
 ```
 
-* Comes from Greek word meaning "secret".
+* Comes from a Greek word meaning "secret".
 * Cryptographers invented secret codes to hide messages from unauthorized observers.
 * Modern encryption:
     * Algorithms are public.
@@ -55,7 +55,8 @@ plain text ----------->  cipher text -----------> plain text
     * Public-key functions: two keys
 * Cryptographic hash functions
     * Suppose we have a cryptographic hash function `h()`.
-    * It takes a message `m` of arbitrary length and produces a smaller (short) number `h(m)`.
+    * It takes a message `m` of arbitrary length as in put and produces a smaller (short) number
+      `h(m)`.
     * Properties
         * It should be easy to compute `h(m)`.
         * One-way function: given `h(x)`, it should be difficult to find `x`. In other words, the
@@ -68,6 +69,7 @@ plain text ----------->  cipher text -----------> plain text
           find two values that produce the same hash.
     * Ideally, you should get all three properties for a strong cryptographic hash function.
       However, not all hash functions provide all three properties.
+    * Example: SHA-256.
 * Private key crypto (or symmetric key crypto)
 
   ```bash
@@ -79,6 +81,7 @@ plain text ----------->  cipher text -----------> plain text
     * One key is shared between encryption and decryption.
     * This assumes that there is a way to share the secret key in a secure fashion.
     * This was the only type of encryption prior to invention of public-key in 1970's.
+    * Example: AES.
 
 * Public key crypto (or asymmetric key crypto)
 
@@ -98,6 +101,7 @@ plain text ----------->  cipher text -----------> plain text
       encrypt the message and Bob can use his private key to decrypt the message. Since Bob should
       be the only one who has Bob's private key, Alice and Bob can securely share the message.
     * This does not require having a secure key distribution mechanism.
+    * Example: RSA.
 
 ## Applications of Cryptography
 
@@ -119,7 +123,7 @@ plain text ----------->  cipher text -----------> plain text
     * This is typically produced by a cryptographic hash function, e.g., SHA-256.
 * Digital signature
     * A digital signature combines public key crypto and hashing.
-    * It verifies a message or a document is an unaltered copy of one produced by the signer.
+    * It verifies a message or a document is an unaltered copy of the one produced by the signer.
     * This is not about message encryption, i.e., message itself doesn't need to be secret.
     * There are two parties involved, a signer and a verifier.
         * The signer is the one who sends a message and wants to prove that the message is indeed
@@ -221,7 +225,7 @@ on.
 * SSH key pairs are typically used for SSH authentication. This is a different way of authenticating
   yourself to a server than using a password.
 * The way it works is the following. On the server machine (i.e., the machine that you want to SSH
-  in to), you can add your public key to the `authorized_keys` file. This file is located in the
+  into), you can add your public key to the `authorized_keys` file. This file is located in the
   `$HOME/.ssh/` directory in your home directory (on the server machine). The `authorized_keys` file
   contains a list of public keys that are allowed for public/private key pair authentication. On the
   client side, you need to have your private key under the `$HOME/.ssh/` directory (on the client
@@ -234,14 +238,11 @@ on.
 * What this means is that if you add your public key to the `$HOME/.ssh/authorized_keys` file from
   one machine, this is all shared. Thus, you can log in to all other CSIL Linux machines from your
   client machine as long as you have your private key on your client machine.
-* Now, a CSIL Linux machine doesn't have to be just an SSH server. You can use one CSIL Linux
-  machine as an SSH client and log in to another CSIL Linux machine as an SSH server. Thus, you can
-  have a private key on an CSIL Linux machine and log in to another CSIL Linux machines.
-* However, since all CSIL Linux machines share the same home directory, a private key on one CSIL
-  Linux machine is shared with all other CSIL Linux machines as well. Thus, as long as you have your
-  private key on one CSIL Linux machine, you can log in from any CSIL Linux machine to any other
-  CSIL Linux machine. This is because both the private key and the `authorized_keys` file are
-  shared.
+* Since all CSIL Linux machines share the same home directory, a private key on one CSIL Linux
+  machine is shared with all other CSIL Linux machines as well. What this means is that both the
+  private key and the `authorized_keys` file are shared. Thus, you can log in from any CSIL Linux
+  machine to any other CSIL Linux machine. The "client" machine uses your private key. The "server"
+  machine uses `authorized_keys`.
 * Since you created a public/private key pair above, you only need to add your public key to the
   `authorized_keys` file on a CSIL Linux machine. You can use the following command, which appends
   your public key to the `authorized_keys` file.
@@ -273,22 +274,21 @@ on.
 
 ## Activity: Collisions in Cryptographic Hash Functions
 
-Above, we discussed the possibility of collisions in cryptographic hash functions as well as "window
-of validity" where a cryptographic hash function is considered secure (i.e., still collision
-resistant and/or still difficult to reverse). A well-known example of a popular cryptographic hash
-function that is no longer considered secure is [MD5](https://en.wikipedia.org/wiki/MD5), which was
-once universal but no longer used in applications that require a secure cryptographic hash function.
+We discussed the possibility of collisions in cryptographic hash functions as well as "window of
+validity" where a cryptographic hash function is considered secure (i.e., still collision resistant
+and/or still difficult to reverse). A well-known example of a popular cryptographic hash function
+that is no longer considered secure is [MD5](https://en.wikipedia.org/wiki/MD5), which was once
+universal but no longer used in applications that require a secure cryptographic hash function.
 There is a good description of this history on
 [Wikipedia](https://en.wikipedia.org/wiki/MD5#Collision_vulnerabilities).
 
-It used to be the case that MD5 was the most popular choice for secure digest (discussed above), but
-not anymore. For example, if you look at Ubuntu 14.04.6, which is one of the older versions of
-Ubuntu Linux, [its download page](https://releases.ubuntu.com/trusty/) shows all the downloadable
-files as well as the hashes from various algorithms, including MD5, SHA1, and SHA256. Click the link
-and see for yourself. However, if you look at a more recent version, e.g., [Ubuntu 20.04.6's
-download page](https://releases.ubuntu.com/20.04.6/), it only shows a hash for SHA256. Also click
-the link and see for yourself. This is because MD5 is no longer considered secure. (And actually
-SHA1 is no longer considered secure either.)
+For example, if you look at Ubuntu 14.04.6, which is one of the older versions of Ubuntu Linux, [its
+download page](https://releases.ubuntu.com/trusty/) shows all the downloadable files as well as the
+hashes from various algorithms, including MD5, SHA1, and SHA256. Click the link and see for
+yourself. However, if you look at a more recent version, e.g., [Ubuntu 20.04.6's download
+page](https://releases.ubuntu.com/20.04.6/), it only shows a hash for SHA256. Also click the link
+and see for yourself. This is because MD5 is no longer considered secure. (And actually SHA1 is no
+longer considered secure either.)
 
 Let's try a simple example as an activity to examine this further.
 
@@ -298,7 +298,7 @@ two images that generate the same MD5 hash. First take a look at the images and 
 different they are: the [first image](https://s3-eu-west-1.amazonaws.com/md5collisions/ship.jpg) and
 the [second image](https://s3-eu-west-1.amazonaws.com/md5collisions/plane.jpg).
 
-Then run the following commands to download those images and generate a MD5 hash for each.
+Then run the following commands to download those images and generate an MD5 hash for each.
 
 ```bash
 $ wget https://s3-eu-west-1.amazonaws.com/md5collisions/ship.jpg
