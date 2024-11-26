@@ -31,6 +31,11 @@ plain text ----------->  cipher text -----------> plain text
     * Algorithms are public.
     * Keys are secret and provide security.
     * May be symmetric (secret) or asymmetric (public). More below.
+    * Why is this better?
+        * If you lose an algorithm (e.g., a codebook), everybody is at risk. You also need to
+          invent a new codebook, which is expensive.
+        * If you lose a key, you can use a new key, which is much less expensive. Also, no one else
+          is at risk.
 * Cryptographic algorithms goal:
     * Given a key, it should be relatively easy to compute.
     * Without a key, it should be hard to compute (invert).
