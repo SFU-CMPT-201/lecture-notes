@@ -145,9 +145,14 @@ plain text ----------->  cipher text -----------> plain text
           who can use the private key to encrypt.
 * Digital certificate
     * Digital certificates use digital signatures.
-    * When you use your browser to go to Instagram, how do you know if you're really communicating
-      with Instagram?
-    * If you use HTTP, there is no guarantee.
+    * Scenario: When you communicate with a website, e.g., Instagram, you can use their public key
+      to encrypt your data, which only Instagram can decrypt. This is safer for login credentials,
+      etc.
+        * Question: How do you get the public key of Instagram?
+        * One way is for Instagram to send you the public key, when you first go to the website.
+        * Then the question is how do you know if the public key really belongs to Instagram? A
+          rogue website can disguise as Instagram and send you a wrong key.
+    * If you use HTTP, there is no encryption.
     * However, if you use HTTPS, Instagram will send you its public key as well as something called
       a *digital certificate* that proves that the public key indeed belongs to Instagram.
     * Your OS verifies the authenticity of the digital certificate.
