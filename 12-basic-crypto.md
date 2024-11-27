@@ -158,8 +158,8 @@ plain text ----------->  cipher text -----------> plain text
         * Then the question is how do you know if the public key really belongs to Instagram? A
           rogue website can disguise as Instagram and send you a wrong key.
     * If you use HTTP, there is no encryption.
-    * However, if you use HTTPS, Instagram will send you its public key as well as something called
-      a *digital certificate* that proves that the public key indeed belongs to Instagram.
+    * However, if you use HTTPS, Instagram will send you its public key in a document called a
+      *digital certificate* that proves that the public key indeed belongs to Instagram.
     * Your OS verifies the authenticity of the digital certificate.
     * After that, your browser uses Instagram's public key to encrypt messages and communicate with
       Instagram. This way, only Instagram can decrypt received messages (assuming that only
@@ -180,8 +180,8 @@ plain text ----------->  cipher text -----------> plain text
     * Now, the digital certificate contains VeriSign's signature. As long as you verify this
       signature, you can be assured (i) that the document was indeed signed by VeriSign and (ii)
       that the public key belongs to Instagram.
-    * In order to verify VeriSign's signature, you need VeriSign's public key. (Refer to the
-      digital signature discussion above if you need a refresher.)
+    * In order to verify VeriSign's signature, you need VeriSign's public key. (Refer to the digital
+      signature discussion above if you need a refresher.)
     * For well-known digital certificate authorities like VeriSign, OS vendors (e.g., Microsoft,
       Apple, etc.) have trust relationships. Thus, their public keys are shipped with an OS. For
       example, Windows, MacOS, Android, iOS, etc. all have public keys of VeriSign as well as other
