@@ -143,3 +143,8 @@
       retransmission and (server-side) duplicate filtering are combined.
     * Zero-or-more: An RPC call will be invoked zero or more times. This is when (client-side)
       request retransmission and (server-side) re-execution are combined.
+* RPC is ideal for *idempotent functions*.
+    * An idempotent function is a function that (i) produces the same output even if it is called
+      multiple times, given the input is the same, and (ii) doesn't alter the system state after the
+      first execution.
+    * For RPC, an idempotent function is safe even with re-executions and there are no side effects.
