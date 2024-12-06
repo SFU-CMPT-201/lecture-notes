@@ -8,7 +8,7 @@
     * Communication oriented
     * But not programmer friendly
 * Another Abstraction: RPC (Remote Procedure Call)
-    * Goal: it should appear that the programmer is calling a local function
+    * Goal: it should appear as if the programmer were calling a local function
     * A mechanism to enable function calls between different processes
     * First proposed in the 80's
     * Examples
