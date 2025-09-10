@@ -27,7 +27,7 @@
     * The simplest way to define a process is a *running program*.
     * However, it is not quite as simple as that, and we'll learn about it more.
 * Program in memory
-    * When you run a program, the OS creates a memory space for the program to run.
+    * When you run a program, the OS creates a memory space in RAM for the program to run.
     * You will learn what this memory space contains in a later assignment.
     * One thing that is relevant to this lecture is the code of the program. It gets loaded to the
       memory space for the program so that the CPU can easily access the code and run it.
