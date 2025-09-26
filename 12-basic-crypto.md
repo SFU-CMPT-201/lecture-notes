@@ -66,12 +66,14 @@ plain text ----------->  cipher text -----------> plain text
         * It should be easy to compute `h(m)`.
         * One-way function: given `h(x)`, it should be difficult to find `x`. In other words, the
           reverse of `h()` should be difficult to compute.
-        * Weak collision resistance: given `x`, it should be difficult to find `x'` where `h(x') ==
-          h(x)`. In other words, given a value and a hash function, it should be difficult to find
-          another value that produces the same hash.
-        * Strong collision resistance: it should be difficult to find two messages `x` and `x'`
-          where `h(x) == h(x')`. In other words, given a hash function, it should be difficult to
-          find two values that produce the same hash.
+        * Weak collision resistance (weak resistance against collision): given `x`, it should be
+          difficult to find `x'` where `h(x') == h(x)`. In other words, given a value and a hash
+          function, it should be difficult to find another value that produces the same hash.
+        * Strong collision resistance (strong resistance against collision): it should be difficult
+          to find two messages `x` and `x'` where `h(x) == h(x')`. In other words, given a hash
+          function, it should be difficult to find two values that produce the same hash.
+        * Strong vs. weak: strong collision resistance implies weak collision resistance, while weak
+          collision resistance does not imply strong collision resistance.
     * Ideally, you should get all three properties for a strong cryptographic hash function.
       However, not all hash functions provide all three properties.
     * Example: SHA-256.

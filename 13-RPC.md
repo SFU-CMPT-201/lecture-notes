@@ -15,15 +15,13 @@
         * Sun RPC
         * Java RMI
         * CORBA
-    * Other examples that borrow the idea
-        * XML-RPC
+        * gRPC
         * Android Bound Services with AIDL
-        * Google Protocol Buffers
 * RPC
 
     ```c
     // Client process
-    int main (…)
+    int main (...)
 
     {
         ...
@@ -33,7 +31,7 @@
 
     // Server process
     ...
-    void rpc_call(…) {
+    void rpc_call(...) {
         ...
     }
     ...

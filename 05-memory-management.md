@@ -287,7 +287,7 @@ This lecture assumes that you know the following already.
   combine them into a larger block. This makes room for larger allocation requests.
     * External fragmentation
         * We might run into a scenario where we have left with many small blocks that can't satisfy
-          a large allocation request, *even if the total sum of all free blocks exceed the size of
+          a large allocation request, *even if the total sum of all free blocks exceeds the size of
           the large allocation*. This is called external fragmentation.
         * There's a similar problem called *internal* fragmentation. We will discuss it in [Virtual
           Memory](06-virtual-memory.md)
