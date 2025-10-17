@@ -62,7 +62,7 @@
     * Registers are the smallest in size but the closest to the CPU (fastest).
     * Tapes are the slowest but the largest in size.
 * Trade-offs
-    * Bigger size typically means less expensive (size correlates with price).
+    * Bigger size typically means more expensive (size correlates with price).
     * Distance (access speed): faster means closer to CPU.
     * Persistence
         * The term *commit* means moving data from memory to disk. More generally, it means changing
