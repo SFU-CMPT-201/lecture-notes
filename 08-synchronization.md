@@ -514,9 +514,13 @@
 * The pthread library provides support for condition variables as follows.
     * `pthread_cond_t`: the data type to define a condition variable.
     * `pthread_cond_signal(pthread_cond_t *cond)`: the function that sends a signal to `cond`. If
-      there is a thread waiting on `cond`, this wakes up the thread.
+      there is a thread waiting on `cond` (i.e., sleeping in the I/O queue), this wakes up the
+      thread (i.e., moves the thread to the ready queue).
     * `pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)`: the function that waits
       for a signal sent to `cond`.
+        * `mutex` is a lock that protects the shared variable associated with `cond`. This is
+          necessary because the waiting thread typically checks the shared variable to see if it can
+          proceed or not after waking up. This will be clearer with the example below.
         * For `mutex`, it behaves like a lock-safe sleep. Internally, it releases `mutex`, waits for
           a signal on `cond`, and (once a signal is sent to `cond`,) wakes up and re-grabs `mutex`.
           In other words, it does not go to sleep while holding a lock.
@@ -638,6 +642,11 @@
       returning (as explained earlier). Generally speaking, since this is a lock, there can be
       other threads that can grab the lock and and consume available items. Thus, we always need to
       check again if there are indeed available items to consume using a while loop.
+    * It is also *necessary* to use a shared variable (here, `avail`) associated with the condition
+      variable (here, `cond`) to check if we can indeed proceed. This is because a signal sent to a
+      `cond` is *lost* if there is no thread waiting on `cond` at that time. Thus, when a thread
+      wakes up from `pthread_cond_wait()`, it needs to check the shared variable to see if it can
+      proceed or not.
 * Thus, using a condition variable generally follows this template.
 
   ```c
