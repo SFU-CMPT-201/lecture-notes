@@ -19,7 +19,15 @@
         * The important part is filling out `struct sigaction`. The first member is the function
           pointer to your signal handler.
 * When using signals, you need to use signal safe functions.
-    * `man signal-safety` for the list of async-signal-safe functions
+    * `man signal-safety` for the list of async-signal-safe functions. For example, `printf()`
+      is not signal safe, but `write()` is.
+    * When a signal is delivered, the regular execution stops and jumps to the signal handler. This
+      is similar to a function call, but without passing any arguments or expecting any return
+      values. When the signal handler returns, the execution returns to where it was interrupted.
+      `printf()` has an internal buffer, and if it is interrupted in the middle of writing to that
+      buffer, and the signal handler also calls `printf()`, the internal state of the buffer may be
+      overwritten or corrupted, leading to undefined behavior. On the other hand, `write()` receives
+      a buffer from the caller, and there's no internal state that can be corrupted.
 
 ## Activity: `sigaction()`
 
