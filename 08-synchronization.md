@@ -518,15 +518,13 @@
       thread (i.e., moves the thread to the ready queue).
     * `pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)`: the function that waits
       for a signal sent to `cond`.
-        * `mutex` is a lock that protects the shared variable associated with `cond`. This is
-          necessary because of the usage of `cond`. The signaling thread first changes a shared
-          variable (not `cond` but a separate shared variable) to indicate that the waiting thread
-          can proceed, and then calls `pthread_cond_signal()`. On the other hand, the waiting thread
-          checks the shared variable to see if it can indeed proceed after waking up from
-          `pthread_cond_wait()`. This usage will be clearer with the example below.
-        * For `mutex`, it behaves like a lock-safe sleep. Internally, it releases `mutex`, waits for
-          a signal on `cond`, and (once a signal is sent to `cond`,) wakes up and re-grabs `mutex`.
-          In other words, it does not go to sleep while holding a lock.
+        * `mutex` is a lock that protects the data shared between the signaling thread and the
+          waiting thread. For example, `avail` in the previous example needs a lock for data race
+          protection. `cond` is just used for notification.
+        * `pthread_cond_wait()` behaves like lock-safe sleep with notification. Internally, it first
+          releases `mutex`, waits for a signal on `cond`, and (once a signal is sent to `cond`,)
+          wakes up and re-grabs `mutex`. In other words, it does not go to sleep while holding a
+          lock.
         * This is because doing so would unnecessarily prevent other threads from grabbing the lock.
         * See the example below for an illustration.
     * `pthread_cond_broadcast(pthread_cond_t *cond)`: the function that wakes up all threads
