@@ -16,6 +16,12 @@
 * Link (MAC): Local network addressing and routing.
     * Think Amazon package delivery again: need an address and routes (how to get there).
     * This is only for a (small area) local network.
+    * Think Amazon again. A warehouse covers a small local area. There are small trucks that deliver
+      packages within the local area. But there are also many warehouses across the country & across
+      the globe. To deliver packages across the country/globe, we need big trucks or planes that go
+      between warehouses. The link layer deals with a local network (analogous to an area that a
+      warehouse covers). The next layer (IP) deals with connecting different local networks
+      (analogous to connecting different warehouses across the country/globe).
     * E.g., wired local network and wireless local network.
     * This layer uses MAC addresses for addressing.
 * IP: Inter-network addressing and routing.
