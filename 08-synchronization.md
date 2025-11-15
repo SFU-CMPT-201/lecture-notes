@@ -753,12 +753,12 @@
 * Possible solutions
     * We can have at least one philosopher grab forks in a different order. E.g., have one
       philosopher grab their left fork and then the right fork while having all other philosophers
-      grab their right fork and then the left fork. This breaks the hold-and-wait condition since
-      there will be at least one philosopher who can't grab any fork.
+      grab their right fork and then the left fork. This breaks the circular-wait condition since
+      there will be at least one philosopher who does not complete the circle.
     * We can try grabbing both locks at once.
         * Grab the left lock. Try the right lock. If you can't grab it, give up the left lock, and
           try again.
-        * This prevents the circular-wait condition from occurring.
+        * This prevents the hold-and-wait condition from occurring.
         * This does not prevent starvation and it could also lead to livelock.
 
       ```c
