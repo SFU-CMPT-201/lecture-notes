@@ -129,8 +129,9 @@
     * Crash before reply: The server executes the request but can crash before sending a reply.
     * Client crash: The client crashes before receiving a reply.
 * Local procedure calls provide *exactly-once* invocation semantics.
+    * If one local procedure call is made, it is executed exactly once.
 * Remote procedure calls depend on how failures are handled.
-    * Client-side: Request retransmission
+    * Client-side: A client can retransmit a request if it's suspected to be lost.
     * Server-side: Two possibilities regarding how to handle client-side retransmissions.
         * Re-execution: Easy to implement.
         * Duplicate filtering & retransmission of the previous reply: Extra implementation required.
@@ -138,11 +139,15 @@
     * Maybe: An RPC call may be invoked at the server side. This is when no fault-tolerance
       mechanisms are used.
     * At-most-once: An RPC call will be invoked at most once. This is when (client-side) request
-      retransmission and (server-side) duplicate filtering are combined.
+      retransmission and (server-side) duplicate filtering are combined. This is "at most once"
+      because a request may be lost consistently and never reaches the server.
     * Zero-or-more: An RPC call will be invoked zero or more times. This is when (client-side)
-      request retransmission and (server-side) re-execution are combined.
+      request retransmission and (server-side) re-execution are combined. A request can be executed
+      multiple times if the client retransmits it and the server re-executes it.
 * RPC is ideal for *idempotent functions*.
     * An idempotent function is a function that (i) produces the same output even if it is called
       multiple times, given the input is the same, and (ii) doesn't alter the system state after the
       first execution.
+    * For example, reading a file at a specific offset is an idempotent function. Writing to a
+      file is not an idempotent function.
     * For RPC, an idempotent function is safe even with re-executions and there are no side effects.
